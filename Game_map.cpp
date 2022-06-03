@@ -63,15 +63,15 @@ void Game_map::set_up_squares()
 	{
 		for (int j = 0; j < this->get_gridlength(); j++)
 		{
-			auto search_result = std::find(std::begin(handpaintedwall_positions), std::end(handpaintedwall_positions), sf::Vector2i(i, j));
-			if (search_result != std::end(handpaintedwall_positions))
-			{
-				column[j] = std::make_unique<Game_square>(Game_square("images/handpaintedwall2.png", 50 * j, 50 * i, false));
-			}
-			else
-			{
-				column[j] = std::make_unique<Game_square>(Game_square("images/grass.png", 50 * j, 50 * i, true));
-			}
+				auto search_result = std::find(std::begin(handpaintedwall_positions), std::end(handpaintedwall_positions), sf::Vector2i(j, i));
+				if (search_result != std::end(handpaintedwall_positions))
+				{
+					column[j] = std::make_unique<Game_square>(Game_square("images/handpaintedwall2.png", 50 * j, 50 * i, false));
+				}
+				else
+				{
+					column[j] = std::make_unique<Game_square>(Game_square("images/grass.png", 50 * j, 50 * i, true));
+				}
 		}
 		this->get_squares()[i] = std::move(column);
 	}
