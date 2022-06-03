@@ -1,12 +1,13 @@
+#pragma once
 #include "stdafx.h"
-using namespace sf;
+#include "Game_map.h"
 class Player
 {
-	Clock animationTimer;
-	IntRect currentFrame;
+	sf::Clock animationTimer;
+	sf::IntRect currentFrame;
 	bool moving = false;
-	Texture texture;
-	Sprite shape;
+	sf::Texture texture;
+	sf::Sprite shape;
 	void initSprite();
 	void initTexture();
 public:
@@ -14,8 +15,8 @@ public:
 	virtual ~Player() {}
 
 	//functions
-	void updateMovement();
+	void updateMovement(const std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& map);
 	void updateAnimations();
-	void render(RenderTarget& target);
+	void render(sf::RenderTarget& target);
+	bool check_collision(const std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>&, float, float);
 };
-
