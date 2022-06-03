@@ -11,9 +11,9 @@ private:
 public:
 	Game_square(std::string, float, float, bool);
 	bool set_Sprite(std::string);
-	sf::Sprite& get_sprite();
+	sf::Sprite& get_Sprite_ref();
 	bool get_is_Accessable() const;
-	sf::Texture& get_Texture();
+	sf::Texture& get_Texture_ref();
 	sf::Vector2f get_position() const;
 	void set_Texture(std::string);
 	void set_position(float, float);

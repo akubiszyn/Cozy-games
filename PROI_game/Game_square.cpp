@@ -1,12 +1,12 @@
 #include "Game_square.h"
 
 
-sf::Sprite& Game_square::get_sprite()
+sf::Sprite& Game_square::get_Sprite_ref()
 {
 	return this->square_sprite;
 }
 
-sf::Texture& Game_square::get_Texture() 
+sf::Texture& Game_square::get_Texture_ref()
 {
 	return this->square_texture;
 }

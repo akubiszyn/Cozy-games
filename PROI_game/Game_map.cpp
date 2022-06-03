@@ -15,7 +15,7 @@ unsigned int Game_map::get_gridlength() const
 	return this->gridlength;
 }
 
-std::vector<std::vector<std::unique_ptr<Game_square>>>& Game_map::get_squares()
+std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& Game_map::get_squares()
 {
 	return this->squares;
 }
@@ -52,7 +52,7 @@ void Game_map::set_up_npc_positions()
 void Game_map::set_up_squares()
 {
 	this->get_squares().clear();
-	std::vector<std::unique_ptr<Game_square>> row;
+	std::map<unsigned int, std::unique_ptr<Game_square>> column;
 	sf::Vector2i handpaintedwall_positions[27] = { sf::Vector2i(0, 0), sf::Vector2i(1, 0),  sf::Vector2i(2, 0),  sf::Vector2i(3, 0),  sf::Vector2i(4, 0),
 												  sf::Vector2i(5, 0),  sf::Vector2i(7, 0),  sf::Vector2i(0, 1),  sf::Vector2i(3, 2), sf::Vector2i(6, 2),
 												  sf::Vector2i(7, 2), sf::Vector2i(0, 3), sf::Vector2i(3, 3), sf::Vector2i(7, 3), sf::Vector2i(0, 4),
@@ -63,17 +63,17 @@ void Game_map::set_up_squares()
 	{
 		for (int j = 0; j < this->get_gridlength(); j++)
 		{
-			auto search_result = std::find(std::begin(handpaintedwall_positions), std::end(handpaintedwall_positions), sf::Vector2i(j, i));
+			auto search_result = std::find(std::begin(handpaintedwall_positions), std::end(handpaintedwall_positions), sf::Vector2i(i, j));
 			if (search_result != std::end(handpaintedwall_positions))
 			{
-				row.push_back(std::make_unique<Game_square>(Game_square("images/handpaintedwall2.png", 50 * j, 50 * i, false)));
+				column[j] = std::make_unique<Game_square>(Game_square("images/handpaintedwall2.png", 50 * j, 50 * i, false));
 			}
 			else
 			{
-				row.push_back(std::make_unique<Game_square>(Game_square("images/grass.png", 50 * j, 50 * i, true)));
+				column[j] = std::make_unique<Game_square>(Game_square("images/grass.png", 50 * j, 50 * i, true));
 			}
 		}
-		this->get_squares().push_back(std::move(row));
+		this->get_squares()[i] = std::move(column);
 	}
 	/*
 	for (const sf::Vector2i& vec : handpaintedwall_positions)
@@ -164,11 +164,22 @@ void Game_map::set_up_squares()
 	this->get_squares().push_back(std::move(row));
 	row.clear();
 	*/
-	for (const std::vector<std::unique_ptr<Game_square>>& vec : this->get_squares())
+	for (const std::pair<const unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& row: this->get_squares())
 	{
-		for (const std::unique_ptr<Game_square>& ptr : vec)
+		for (const std::pair<const unsigned int, std::unique_ptr<Game_square>>& column : row.second)
 		{
-			ptr->get_sprite().setTexture(ptr->get_Texture());
+			column.second->get_Sprite_ref().setTexture(column.second->get_Texture_ref());
+		}
+	}
+}
+
+void Game_map::update_game_map(sf::RenderTarget& window)
+{
+	for (const std::pair<const unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& row : this->get_squares())
+	{
+		for (const std::pair<const unsigned int, std::unique_ptr<Game_square>>& column : row.second)
+		{
+			window.draw(column.second->get_Sprite_ref());
 		}
 	}
 }

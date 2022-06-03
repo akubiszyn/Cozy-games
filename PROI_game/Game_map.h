@@ -1,13 +1,13 @@
 #pragma once
-#include<SFML/Graphics.hpp>
 #include "Game_square.h"
 #include<vector>
 #include<memory>
+#include<map>
 
 class Game_map
 {
 private:
-	std::vector<std::vector<std::unique_ptr<Game_square>>> squares;
+	std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>> squares;
 	unsigned int gridlength;
 	unsigned int gridheight;
 	sf::Vector2i player_position;
@@ -20,6 +20,7 @@ public:
 	sf::Vector2i get_player_position() const;
 	unsigned int get_gridlength() const;
 	unsigned int get_gridheight() const;
-	std::vector<std::vector<std::unique_ptr<Game_square>>>& get_squares();
+	std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& get_squares();
+	void update_game_map(sf::RenderTarget&);
 	Game_map();
 };

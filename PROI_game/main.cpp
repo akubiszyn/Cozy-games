@@ -1,4 +1,3 @@
-#include<SFML/Graphics.hpp>
 #include "Game_map.h"
 
 int main()
@@ -17,13 +16,7 @@ int main()
 			}
 		}
 		window.clear();
-		for (const std::vector<std::unique_ptr<Game_square>>& vec : map.get_squares())
-		{
-			for (const std::unique_ptr<Game_square>& ptr : vec)
-			{
-				window.draw(ptr->get_sprite());
-			}
-		}
+		map.update_game_map(window);
 		window.display();
 	}
 }
