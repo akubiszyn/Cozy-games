@@ -9,8 +9,8 @@ Player::Player() {
 void Player::initSprite()
 {
 	this->shape.setTexture(texture);
-	this->currentFrame = sf::IntRect(0, 0, 48, 48);
-	this->shape.setTextureRect(sf::IntRect(0, 0, 48, 48));
+	this->currentFrame = sf::IntRect(0, 0, 72, 50);
+	this->shape.setTextureRect(sf::IntRect(0, 0, 72, 50));
 	this->shape.setScale(1.0, 1.0);
 }
 
@@ -126,10 +126,10 @@ void Player::updateAnimations()
 	}
 	else if (this->moving == true) {
 		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.1f) {
-			if (this->currentFrame.left >= 336) {
+			if (this->currentFrame.left >= 504) {
 				this->currentFrame.left = 0;
 			}
-			this->currentFrame.left += 48;
+			this->currentFrame.left += 72;
 			this->shape.setTextureRect(this->currentFrame);
 			this->animationTimer.restart();
 		}
