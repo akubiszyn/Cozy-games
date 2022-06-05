@@ -9,6 +9,7 @@ private:
 	Game_map map;
 	Player player;
 	bool is_music_playing;
+	bool is_background_music_playing;
 	sf::Music music;
 public:
 	Game(sf::RenderWindow&, unsigned int);
