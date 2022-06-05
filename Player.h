@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "Game_map.h"
 class Player
 {
@@ -15,8 +14,8 @@ public:
 	virtual ~Player() {}
 
 	//functions
-	void updateMovement(const std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& map);
+	void updateMovement(Game_map&);
 	void updateAnimations();
 	void render(sf::RenderTarget& target);
-	bool check_collision(const std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>&, float, float);
+	bool check_collision(Game_map&, float, float);
 };

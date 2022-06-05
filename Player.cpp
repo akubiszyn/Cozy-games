@@ -3,7 +3,7 @@
 Player::Player() {
 	this->initTexture();
 	this->initSprite();
-	this->shape.setPosition(sf::Vector2f(0, 101));
+	this->shape.setPosition(sf::Vector2f(1680, 497));
 }
 
 void Player::initSprite()
@@ -16,33 +16,54 @@ void Player::initSprite()
 
 void Player::initTexture()
 {
-	this->texture.loadFromFile("images/walk_rightm.png");
+	this->texture.loadFromFile("images/walk_leftm.png");
 }
 
 
-bool Player::check_collision(const std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& map, float movement_x, float movement_y)
+bool Player::check_collision(Game_map & map, float movement_x, float movement_y)
 {
 	sf::FloatRect player_rect = this->shape.getGlobalBounds();
 	sf::FloatRect check = sf::FloatRect(player_rect.left + movement_x, player_rect.top + movement_y, player_rect.width, player_rect.height);
-	for (const std::pair<const unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& row : map)
+	for (const std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : map.get_squares_first())
 	{
-		for (const std::pair<const unsigned int, std::unique_ptr<Game_square>>& column : row.second)
+		for (const std::pair<const unsigned int, Game_square>& column : row.second)
 		{
-			sf::FloatRect square = column.second->get_Sprite_ref().getGlobalBounds();
-			if (square.intersects(check) && column.second->get_is_Accessable() == false)
+			sf::FloatRect square = column.second.get_Sprite().getGlobalBounds();
+			if (square.intersects(check) && column.second.get_is_Accessable() == false)
 			{
 					return true;
 			}
+		}
+	}
+	for (const std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : map.get_squares_second())
+	{
+		for (const std::pair<const unsigned int, Game_square>& column : row.second)
+		{
+			sf::FloatRect square = column.second.get_Sprite().getGlobalBounds();
+			if (square.intersects(check) && column.second.get_is_Accessable() == false)
+			{
+				return true;
+			}
+		}
+	}
+	for (std::unique_ptr<Animal>& animal_ptr : map.get_animals())
+	{
+		if (animal_ptr->get_Sprite().getGlobalBounds().intersects(check))
+		{
+			animal_ptr->stop_now(true);
+			map.set_music_path(animal_ptr->get_music_path());
+			map.set_play_music(true);
 		}
 	}
 	return false;
 }
 
 
-void Player::updateMovement(const std::map<unsigned int, std::map<unsigned int, std::unique_ptr<Game_square>>>& map) {
+void Player::updateMovement(Game_map& map) {
+	bool cont = false;
 	this->moving = false;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		if (!this->check_collision(map, 0.0f, -2.0f))
+		if (!this->check_collision(map,0.0f, -2.0f))
 		{
 			this->shape.move(0.f, -2.0f);
 			this->moving = true;
@@ -75,6 +96,21 @@ void Player::updateMovement(const std::map<unsigned int, std::map<unsigned int, 
 			this->updateAnimations();
 		}
 	}
+	for (std::unique_ptr<Animal>& animal_ptr : map.get_animals())
+	{
+		if (!animal_ptr->get_Sprite().getGlobalBounds().intersects(this->shape.getGlobalBounds()))
+		{
+			animal_ptr->stop_now(false);
+		}
+		else
+		{
+			cont = true;
+		}
+	}
+	if (!cont)
+	{
+		map.set_play_music(false);
+	}
 	this->updateAnimations();
 }
 
@@ -90,10 +126,10 @@ void Player::updateAnimations()
 	}
 	else if (this->moving == true) {
 		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.1f) {
-			if (this->currentFrame.left >= 336.f) {
+			if (this->currentFrame.left >= 336) {
 				this->currentFrame.left = 0;
 			}
-			this->currentFrame.left += 48.f;
+			this->currentFrame.left += 48;
 			this->shape.setTextureRect(this->currentFrame);
 			this->animationTimer.restart();
 		}
