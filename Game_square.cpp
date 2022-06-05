@@ -1,6 +1,16 @@
 #include "Game_square.h"
 
 
+sf::Sprite Game_square::get_Sprite() const
+{
+	return this->square_sprite;
+}
+
+sf::Texture Game_square::get_Texture() const
+{
+	return this->square_texture;
+}
+
 sf::Sprite& Game_square::get_Sprite_ref()
 {
 	return this->square_sprite;
@@ -21,6 +31,16 @@ bool Game_square::get_is_Accessable() const
 	return this->isAccessable;
 }
 
+Game_square::Game_square()
+{
+	if (!this->set_Sprite("images/grass.png"))
+	{
+		return;
+	}
+	this->position = sf::Vector2f(0, 0);
+	this->square_sprite.setPosition(this->position);
+	this->isAccessable = true;
+}
 
 Game_square::Game_square(std::string texture, float x, float y, bool accessed)
 {
@@ -38,7 +58,7 @@ bool Game_square::set_Sprite(std::string texture)
 {
 	this->set_Texture(texture);
 	this->square_sprite.setTexture(this->square_texture);
-	this->square_sprite.setTextureRect(sf::IntRect(0, 0, 50, 50));
+	this->square_sprite.setTextureRect(sf::IntRect(0, 0, 120, 62));
 	return true;
 }
 
