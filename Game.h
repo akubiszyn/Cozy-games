@@ -8,6 +8,8 @@ private:
 	bool is_end;
 	Game_map map;
 	Player player;
+	bool is_music_playing;
+	sf::Music music;
 public:
 	Game(sf::RenderWindow&, unsigned int);
 	void update_game();
