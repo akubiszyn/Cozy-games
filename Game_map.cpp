@@ -1,10 +1,11 @@
 #include "Game_map.h"
 
+/*
 sf::Vector2i Game_map::get_player_position() const
 {
 	return this->player_position;
 }
-
+*/
 unsigned int Game_map::get_gridheight() const
 {
 	return this->gridheight;
@@ -37,6 +38,7 @@ Game_map::Game_map()
 	this->set_up_initial_state();
 	this->set_music_path("");
 	this->set_play_music(false);
+	this->minigame_choice = 0;
 }
 
 void Game_map::set_up_initial_state()
@@ -234,4 +236,9 @@ void Game_map::set_play_music(bool value)
 bool Game_map::get_play_music() const
 {
 	return this->play_music;
+}
+
+unsigned int Game_map::get_minigame_choice() const
+{
+	return this->minigame_choice;
 }
