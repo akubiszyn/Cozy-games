@@ -46,7 +46,7 @@ bool Player::check_collision(Game_map & map, float movement_x, float movement_y)
 			}
 		}
 	}
-	for (std::unique_ptr<Animal>& animal_ptr : map.get_animals())
+	for (const std::unique_ptr<Animal>& animal_ptr : map.get_animals())
 	{
 		if (animal_ptr->get_Sprite().getGlobalBounds().intersects(check))
 		{
@@ -96,7 +96,7 @@ void Player::updateMovement(Game_map& map) {
 			this->updateAnimations();
 		}
 	}
-	for (std::unique_ptr<Animal>& animal_ptr : map.get_animals())
+	for (const std::unique_ptr<Animal>& animal_ptr : map.get_animals())
 	{
 		if (!animal_ptr->get_Sprite().getGlobalBounds().intersects(this->shape.getGlobalBounds()))
 		{
