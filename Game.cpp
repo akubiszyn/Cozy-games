@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map()), player(Player()), is_music_playing(false)
+Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map()), player(Player()), is_music_playing(false), is_background_music_playing(false)
 {
 	this->window.setFramerateLimit(frame_limit);
 }
@@ -11,6 +11,7 @@ void Game::update_game()
 	{
 		if (this->map.get_play_music() == true && this->is_music_playing == false)
 		{
+			this->is_background_music_playing = false;
 			this->music.openFromFile(this->map.get_music_path());
 			this->music.setLoop(true);
 			this->music.play();
@@ -18,9 +19,17 @@ void Game::update_game()
 		}
 		else if(this->map.get_play_music() == false)
 		{
-			this->music.setLoop(false);
-			this->music.stop();
-			this->is_music_playing = false;
+			if (!this->is_background_music_playing)
+			{
+				this->music.stop();
+				this->is_music_playing = false;
+				this->music.openFromFile("music/background.ogg");
+				this->music.setLoop(true);
+				this->music.play();
+				this->is_background_music_playing = true;
+			}
+			
+
 		}
 		while (window.pollEvent(this->event))
 		{
