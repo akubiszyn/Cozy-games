@@ -20,7 +20,7 @@ private:
 		//Window
 	//sf::RenderWindow& window;
 	//sf::VideoMode videoMode;
-	sf::Event ev;
+	sf::Event event;
 
 		//Mouse positions
 	sf::Vector2i mouse_window;
@@ -35,17 +35,19 @@ private:
 
 		//Game logic
 	bool end;
-	unsigned int points;
-	int health;
-	float Enemy_timer;
-	float Enemy_timer_max;
-	int Max_number_of_enemies;
+	unsigned int score;
+	int to_lose;
+	float food_timer;
+	float food_timer_max;
+	int Max_number_of_food_objects;
 	bool mouse_is_pressed;
+	float movement_speed;
+	float movement_left_right;
 
 		//Game objects
-	std::vector<sf::Sprite> enemies;
-	sf::Texture textures[5];
-	sf::Sprite enemy;
+	std::vector<sf::Sprite> food;
+	sf::Texture textures[8];
+	sf::Sprite food_object;
 	sf::Texture texture;
 	sf::Sprite background;
 	sf::Texture background_texture;
@@ -69,7 +71,7 @@ public:
 		//Functions
 	void Spawn_enemy(sf::RenderWindow&);
 
-	void pollEvents();
+	//void pollEvents();
 	void updateMousePositions(sf::RenderWindow&);
 	void updateText();
 	void updateEnemies(sf::RenderWindow&);
@@ -77,6 +79,6 @@ public:
 	virtual void start(sf::RenderWindow&);
 	void displayText(sf::RenderTarget& target);
 	void displayEnemies(sf::RenderTarget& target);
-	void display();
+	//void display();
 	virtual unsigned int get_score() const;
 };

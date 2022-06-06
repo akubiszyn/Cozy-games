@@ -56,16 +56,18 @@ void Game::initEnemies()
 Clicking_minigame::Clicking_minigame()
 {
 	this->end = false;
-	this->points = 0;
-	this->health = 20;
-	this->Enemy_timer_max = 20.f;
-	this->Enemy_timer = this->Enemy_timer_max;
-	this->Max_number_of_enemies = 5;
+	this->score = 0;
+	this->to_lose = 20;
+	this->food_timer_max = 20.f;
+	this->food_timer = this->food_timer_max;
+	this->Max_number_of_food_objects = 5;
 	this->mouse_is_pressed = false;
-	this->textures_info = { {0, "images/banana.png"}, {1, "images/tomato.png"}, {2, "images/apple.png"}, {3, "images/orange.png"}, {4, "images/watermelon.png"}};
+	this->textures_info = { {0, "images/banana.png"}, {1, "images/tomato.png"}, {2, "images/apple.png"}, {3, "images/orange.png"}, {4, "images/watermelon.png"}, {5, "images/rotten_banana.png"}, {6, "images/rotten_tomato.png"}, {7, "images/rotten_apple.png"} };
 	this->background_texture.loadFromFile("images/background.png");
 	this->background.setTextureRect(sf::IntRect(0, 0, 800, 600));
-	for (int i = 0; i < 5; i++)
+	this->movement_speed = 1.f;
+	this->movement_left_right = 0.f;
+	for (int i = 0; i < 8; i++)
 	{
 		this->textures[i].loadFromFile(this->textures_info[i]);
 	}
@@ -107,47 +109,62 @@ void Clicking_minigame::Spawn_enemy(sf::RenderWindow& window)
 		0.f
 	);
 	*/
-	this->enemy.setTextureRect(sf::IntRect(0, 0, 100, 100));
-	this->enemy.setPosition(sf::Vector2f(static_cast<float>(rand() % static_cast<int>(window.getSize().x - this->enemy.getTextureRect().width)), 0.f));
+	this->food_object.setTextureRect(sf::IntRect(0, 0, 100, 100));
+	this->food_object.setPosition(sf::Vector2f(static_cast<float>(rand() % static_cast<int>(window.getSize().x - this->food_object.getTextureRect().width)), 0.f));
 	//Randomize enemy type
-	int type = rand() % 5;
+	int type = rand() % 8;
 
 	switch (type)
 	{
 	case 0:
-		this->enemy.setTexture(this->textures[0]);
-		this->enemy.setTextureRect(sf::IntRect(0, 0, 10, 10));
+		this->food_object.setTexture(this->textures[0]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 40, 40));
 		//this->enemy.setFillColor(sf::Color::Magenta);
 		break;
 	case 1:
-		this->enemy.setTexture(this->textures[1]);
-		this->enemy.setTextureRect(sf::IntRect(0, 0, 30, 30));
+		this->food_object.setTexture(this->textures[1]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 30, 30));
 		//this->enemy.setFillColor(sf::Color::Blue);
 		break;
 	case 2:
-		this->enemy.setTexture(this->textures[2]);
-		this->enemy.setTextureRect(sf::IntRect(0, 0, 50, 50));
+		this->food_object.setTexture(this->textures[2]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 50, 50));
 		//this->enemy.setFillColor(sf::Color::Cyan);
 		break;
 	case 3:
-		this->enemy.setTexture(this->textures[3]);
-		this->enemy.setTextureRect(sf::IntRect(0, 0, 70, 70));
+		this->food_object.setTexture(this->textures[3]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 70, 70));
 		//this->enemy.setFillColor(sf::Color::Red);
 		break;
 	case 4:
-		this->enemy.setTexture(this->textures[4]);
-		this->enemy.setTextureRect(sf::IntRect(0, 0, 100, 100));
+		this->food_object.setTexture(this->textures[4]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 100, 100));
+		//this->enemy.setFillColor(sf::Color::Green);
+		break;
+	case 5:
+		this->food_object.setTexture(this->textures[5]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 39, 39));
+		//this->enemy.setFillColor(sf::Color::Green);
+		break;
+	case 6:
+		this->food_object.setTexture(this->textures[6]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 29, 29));
+		//this->enemy.setFillColor(sf::Color::Green);
+		break;
+	case 7:
+		this->food_object.setTexture(this->textures[7]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 49, 49));
 		//this->enemy.setFillColor(sf::Color::Green);
 		break;
 	default:
-		this->enemy.setTexture(this->textures[0]);
-		this->enemy.setTextureRect(sf::IntRect(0, 0, 10, 10));
+		this->food_object.setTexture(this->textures[0]);
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 40, 40));
 		//this->enemy.setFillColor(sf::Color::Yellow);
 		break;
 	}
 
 	//Spawn the enemy
-	this->enemies.push_back(this->enemy);
+	this->food.push_back(this->food_object);
 }
 /*
 void Game::pollEvents()
@@ -184,8 +201,8 @@ void Clicking_minigame::updateText()
 {
 	std::stringstream ss;
 
-	ss << "Points: " << this->points << "\n"
-		<< "Health: " << this->health << "\n";
+	ss << "Score: " << this->get_score() << "\n"
+		<< "To_lose: " << this->to_lose << "\n";
 
 	this->text.setString(ss.str());
 }
@@ -201,30 +218,31 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 	*/
 
 	//Updating the timer for enemy spawning
-	if (this->enemies.size() < this->Max_number_of_enemies)
+	if (this->food.size() < this->Max_number_of_food_objects)
 	{
-		if (this->Enemy_timer >= this->Enemy_timer_max)
+		if (this->food_timer >= this->food_timer_max)
 		{
 			//Spawn the enemy and reset the timer
 			this->Spawn_enemy(window);
-			this->Enemy_timer = 0.f;
+			this->food_timer = 0.f;
 		}
 		else
-			this->Enemy_timer += 1.f;
+			this->food_timer += 1.f;
 	}
 
 	//Moving and updating enemies
-	for (int i = 0; i < this->enemies.size(); i++)
+	for (int i = 0; i < this->food.size(); i++)
 	{
 		bool deleted = false;
 
-		this->enemies[i].move(0.f, 1.f);
+		this->food[i].move(0.f, this->movement_speed);
 
-		if (this->enemies[i].getPosition().y > window.getSize().y)
+		if (this->food[i].getPosition().y > window.getSize().y)
 		{
-			this->enemies.erase(this->enemies.begin() + i);
-			this->health -= 1;
-			std::cout << "Health: " << this->health << "\n";
+			this->food.erase(this->food.begin() + i);
+			if(this->food[i].getTextureRect() != sf::IntRect(0, 0, 29, 29) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 39, 39) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 49, 49))
+				this->to_lose -= 1;
+			std::cout << "to_lose: " << this->to_lose << "\n";
 		}
 	}
 
@@ -235,27 +253,62 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 		{
 			this->mouse_is_pressed = true;
 			bool deleted = false;
-			for (size_t i = 0; i < this->enemies.size() && deleted == false; i++)
+			for (size_t i = 0; i < this->food.size() && deleted == false; i++)
 			{
-				if (this->enemies[i].getGlobalBounds().contains(this->mouse_general))
+				if (this->food[i].getGlobalBounds().contains(this->mouse_general))
 				{
 					//Gain points
-					if (this->enemies[i].getTextureRect() == sf::IntRect(0, 0, 10, 10))
-						this->points += 10;
-					else if (this->enemies[i].getTextureRect() == sf::IntRect(0, 0, 30, 30))
-						this->points += 7;
-					else if (this->enemies[i].getTextureRect() == sf::IntRect(0, 0, 50, 50))
-						this->points += 5;
-					else if (this->enemies[i].getTextureRect() == sf::IntRect(0, 0, 70, 70))
-						this->points += 3;
-					else if (this->enemies[i].getTextureRect() == sf::IntRect(0, 0, 100, 100))
-						this->points += 1;
+					if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 40, 40))
+					{
+						this->score += 7;
+						if (this->movement_speed < 8.f && this->movement_speed != 0)
+							this->movement_speed += 0.5;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 30, 30))
+					{
+						this->score += 10;
+						if (this->movement_speed < 8.f && this->movement_speed != 0)
+							this->movement_speed += 0.5;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 50, 50))
+					{
+						this->score += 5;
+						if (this->movement_speed < 8.f && this->movement_speed != 0)
+							this->movement_speed += 0.5;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 70, 70))
+					{
+						this->score += 3;
+						if (this->movement_speed < 8.f && this->movement_speed != 0)
+							this->movement_speed += 0.5;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 100, 100))
+					{
+						this->score += 1;
+						if (this->movement_speed < 8.f && this->movement_speed != 0)
+							this->movement_speed += 0.5;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 39, 39))
+					{
+						this->to_lose -= 2;
+						//this->movement_speed = -this->movement_speed;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 29, 29))
+					{
+						this->to_lose -= 1;
+						//this->movement_speed = -this->movement_speed;
+					}
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 49, 49))
+					{
+						this->to_lose -= 3;
+					}
 
-					std::cout << "Points: " << this->points << "\n";
+
+					std::cout << "Points: " << this->to_lose << "\n";
 
 					//Delete the enemy
 					deleted = true;
-					this->enemies.erase(this->enemies.begin() + i);
+					this->food.erase(this->food.begin() + i);
 				}
 			}
 		}
@@ -273,15 +326,15 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 	std::srand(static_cast<unsigned int>(time(NULL)));
 	while (window.isOpen() && !this->get_end())
 	{
-		while (window.pollEvent(this->ev))
+		while (window.pollEvent(this->event))
 		{
-			switch (this->ev.type)
+			switch (this->event.type)
 			{
 			case sf::Event::Closed:
 				window.close();
 				break;
 			case sf::Event::KeyPressed:
-				if (this->ev.key.code == sf::Keyboard::Escape)
+				if (this->event.key.code == sf::Keyboard::Escape)
 					window.close();
 				break;
 			}
@@ -294,7 +347,7 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 
 			this->updateEnemies(window);
 		}
-		if (this->health <= 0)
+		if (this->to_lose <= 0)
 			this->end = true;
 		window.clear();
 		this->background.setTexture(this->background_texture);
@@ -332,7 +385,7 @@ void Clicking_minigame::displayText(sf::RenderTarget& target)
 void Clicking_minigame::displayEnemies(sf::RenderTarget& target)
 {
 	//Rendering all the enemies
-	for (auto& e : this->enemies)
+	for (auto& e : this->food)
 	{
 		target.draw(e);
 	}
@@ -340,7 +393,7 @@ void Clicking_minigame::displayEnemies(sf::RenderTarget& target)
 
 unsigned int Clicking_minigame::get_score() const
 {
-	return this->points;
+	return this->score;
 }
 /*
 void Clicking_minigame::display()
