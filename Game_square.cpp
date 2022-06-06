@@ -33,22 +33,16 @@ bool Game_square::get_is_Accessable() const
 
 Game_square::Game_square()
 {
-	if (!this->set_Sprite("images/grass.png"))
-	{
-		return;
-	}
-	this->position = sf::Vector2f(0, 0);
+	this->set_Sprite("images/grass.png");
+	this->set_position(0, 0);
 	this->square_sprite.setPosition(this->position);
 	this->isAccessable = true;
 }
 
 Game_square::Game_square(std::string texture, float x, float y, bool accessed)
 {
-	if (!this->set_Sprite(texture))
-	{
-		return;
-	}
-	this->position = sf::Vector2f(x, y);
+	this->set_Sprite(texture);
+	this->set_position(x, y);
 	this->square_sprite.setPosition(this->position);
 	this->isAccessable = accessed;
 
@@ -69,6 +63,10 @@ void Game_square::set_is_Accessable(bool is_accessable)
 
 void Game_square::set_position(float x, float y)
 {
+	if (x < 0 || y < 0)
+	{
+		throw InvalidPositionException();
+	}
 	this->position = sf::Vector2f(x, y);
 }
 
@@ -76,7 +74,37 @@ void Game_square::set_Texture(std::string texture)
 {
 	if (!this->square_texture.loadFromFile(texture))
 	{
-		return;
+		throw TextureNotLoadedException();
 	}
 	this->square_texture.setSmooth(true);
 }
+/*
+void Game_square::check_square_texture(std::string texture)
+{
+	try
+	{
+		this->set_Texture(texture);
+	}
+	catch (TextureNotLoadedException& e)
+	{
+		std::cerr << "TextureNotLoadedException " << e.what() << std::endl;
+		std::exit(-1);
+	}
+	
+}
+*/
+/*
+void Game_square::check_position(float x, float y)
+{
+	try
+	{
+		this->set_position(x, y);
+	}
+	catch (InvalidPositionException& e)
+	{
+		std::cerr << "InvalidPositionException " << e.what() << std::endl;
+		std::exit(-2);
+	}
+	
+}
+*/

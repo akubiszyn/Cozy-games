@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include "Exceptions.h"
 class Game_square
 {
 private:
@@ -20,4 +20,6 @@ public:
 	void set_is_Accessable(bool);
 	sf::Sprite get_Sprite() const;
 	sf::Texture get_Texture() const;
+	//void check_square_texture(std::string);
+	//void check_position(float, float);
 };
