@@ -1,6 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-
+#include "stdafx.h"
 class Game_square
 {
 private:
@@ -9,6 +8,7 @@ private:
 	sf::Texture square_texture;
 	sf::Sprite square_sprite;
 public:
+	Game_square();
 	Game_square(std::string, float, float, bool);
 	bool set_Sprite(std::string);
 	sf::Sprite& get_Sprite_ref();
@@ -18,4 +18,6 @@ public:
 	void set_Texture(std::string);
 	void set_position(float, float);
 	void set_is_Accessable(bool);
+	sf::Sprite get_Sprite() const;
+	sf::Texture get_Texture() const;
 };
