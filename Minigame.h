@@ -16,24 +16,24 @@ public:
 class Clicking_minigame : public Minigame
 {
 private:
-		//Variables
-		//Window
-	//sf::RenderWindow& window;
-	//sf::VideoMode videoMode;
+	//Variables
+	//Window
+//sf::RenderWindow& window;
+//sf::VideoMode videoMode;
 	sf::Event event;
 
-		//Mouse positions
+	//Mouse positions
 	sf::Vector2i mouse_window;
 	sf::Vector2f mouse_general;
 
-		//Resources
+	//Resources
 	sf::Font font;
 	std::map<unsigned int, std::string> textures_info;
 
-		//Text
+	//Text
 	sf::Text text;
 
-		//Game logic
+	//Game logic
 	bool end;
 	unsigned int score;
 	int to_lose;
@@ -44,7 +44,7 @@ private:
 	float movement_speed;
 	float movement_left_right;
 
-		//Game objects
+	//Game objects
 	std::vector<sf::Sprite> food;
 	sf::Texture textures[8];
 	sf::Sprite food_object;
@@ -52,23 +52,23 @@ private:
 	sf::Sprite background;
 	sf::Texture background_texture;
 
-		//Private functions
-	//void iniVariables();
-	//void initWindow();
+	//Private functions
+//void iniVariables();
+//void initWindow();
 	void setFonts();
 	void setText();
 	//void setEnemies();
 
 public:
-		//Constructors / Destructors
+	//Constructors / Destructors
 	Clicking_minigame();
 	virtual ~Clicking_minigame();
 
-		//Accessors
-	//const bool running() const;
+	//Accessors
+//const bool running() const;
 	bool get_end() const;
 
-		//Functions
+	//Functions
 	void Spawn_enemy(sf::RenderWindow&);
 
 	//void pollEvents();
@@ -80,5 +80,58 @@ public:
 	void displayText(sf::RenderTarget& target);
 	void displayEnemies(sf::RenderTarget& target);
 	//void display();
+	virtual unsigned int get_score() const;
+};
+
+class Point{ public: int x, y; };
+class JumpingMinigame : public Minigame {
+	sf::Event event;
+	int width;
+	int height;
+
+	//Resources
+	sf::Font font;
+
+	//Text
+	sf::Text text;
+
+	//Game logic
+	bool end;
+	unsigned int score;
+	int xPos;
+	int yPos;
+	int screenBorder;
+	int platformNumber;
+	float dXPos, dYPos, fallingSpeed;
+	int chickenWidth, chickenHeight;
+	int platformWidth, platformHeight;
+
+	//Game objects
+	Point platforms[10];
+	sf::Texture backgroundT, platformT, chickenT, gameOverT;
+	sf::Sprite background, platform, chicken, gameOver;
+
+	//private funs
+
+
+public:
+	void setFonts();
+	void setText();
+	//Constructors / Destructors
+	JumpingMinigame();
+	virtual ~JumpingMinigame();
+
+	//Accessors
+	void updateText();
+	void start(sf::RenderWindow&);
+	void displayText(sf::RenderTarget& target);
+	// Game logic
+	void adjustPlatforms(float scale, int width, int height);
+	void adjustChicken(float scale, int width, int height);
+	void moveChicken();
+	void generatePlatformsPositions();
+	void updatePlatformsPositions();
+	void platformJump();
+	void play(sf::RenderWindow& window);
 	virtual unsigned int get_score() const;
 };
