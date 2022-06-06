@@ -240,7 +240,7 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 		if (this->food[i].getPosition().y > window.getSize().y)
 		{
 			this->food.erase(this->food.begin() + i);
-			if(this->food[i].getTextureRect() != sf::IntRect(0, 0, 29, 29) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 39, 39) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 49, 49))
+			if (this->food[i].getTextureRect() != sf::IntRect(0, 0, 29, 29) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 39, 39) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 49, 49))
 				this->to_lose -= 1;
 			std::cout << "to_lose: " << this->to_lose << "\n";
 		}
@@ -398,7 +398,7 @@ unsigned int Clicking_minigame::get_score() const
 /*
 void Clicking_minigame::display()
 {
-	
+
 		@return void
 		- clear old frame
 		- render objects
@@ -414,3 +414,183 @@ void Clicking_minigame::display()
 
 	this->window->display();
 }*/
+
+
+JumpingMinigame::JumpingMinigame()
+{
+	this->chickenWidth = 80;
+	this->chickenHeight = 80;
+	this->platformWidth = 72;
+	this->platformHeight = 17;
+	this->width = 400;
+	this->height = 533;
+	this->xPos = 100;
+	this->yPos = 100;
+	this->dXPos = 0;
+	this->dYPos = 0;
+	this->fallingSpeed = 0.2;
+	this->screenBorder = 200;
+	this->end = false;
+	this->score = 0;
+	this->backgroundT.loadFromFile("images/jump_game_background.png");
+	this->platformT.loadFromFile("images/platform.png");
+	this->chickenT.loadFromFile("images/small_single_chicken.png");
+	this->gameOverT.loadFromFile("images/game_over.png");
+	this->background.setTexture(backgroundT);
+	this->platform.setTexture(platformT);
+	this->chicken.setTexture(chickenT);
+	this->gameOver.setTexture(gameOverT);
+	this->adjustChicken(5.0, 16, 16);
+	this->adjustPlatforms(3.0, 24, 7);
+	this->setFonts();
+	this->setText();
+}
+
+JumpingMinigame::~JumpingMinigame()
+{
+	//delete this->window;
+}
+
+void JumpingMinigame::setFonts()
+{
+	if (!this->font.loadFromFile("fonts/arial.ttf"))
+	{
+		std::cout << "ERROR::GAME::INITFONTS::Failed to load font!" << std::endl;
+	}
+}
+
+void JumpingMinigame::setText()
+{
+	//this->text.setFont(this->font);
+	this->text.setCharacterSize(24);
+	this->text.setFillColor(sf::Color::Black);
+	this->text.setString("NONE");
+}
+
+void JumpingMinigame::updateText()
+{
+	std::stringstream ss;
+
+	ss << "Score: " << this->get_score() << "\n";
+
+	this->text.setString(ss.str());
+}
+
+void JumpingMinigame::adjustPlatforms(float scale, int width, int height) {
+	this->platform.setTextureRect(sf::IntRect(0, 0, width, height));
+	this->platform.setScale(scale, scale);
+}
+
+void JumpingMinigame::adjustChicken(float scale, int width, int height) {
+	this->chicken.setTextureRect(sf::IntRect(0, 0, width, height));
+	this->chicken.setScale(scale, scale);
+}
+
+void JumpingMinigame::moveChicken() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		this->xPos += 3;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		this->xPos -= 3;
+	}
+}
+
+void JumpingMinigame::generatePlatformsPositions() {
+	for (int i = 0; i < 10; i++)
+	{
+		this->platforms[i].x = rand() % this->width;
+		this->platforms[i].y = rand() % this->height;
+	}
+}
+
+void JumpingMinigame::updatePlatformsPositions() {
+	for (int i = 0; i < 10; i++)
+	{
+		this->yPos = this->screenBorder;
+		this->platforms[i].y = this->platforms[i].y - dYPos;
+		if (this->platforms[i].y > this->height) {
+			this->platforms[i].y = 0;
+			this->platforms[i].x = rand() % this->width;
+		}
+	}
+}
+
+void JumpingMinigame::platformJump() {
+	for (int i = 0; i < 10; i++) {
+		if ((this->xPos + this->chickenWidth/2 > this->platforms[i].x) 
+			&& (this->xPos + this->chickenWidth/4 < this->platforms[i].x + this->platformWidth) 
+			&& (this->yPos + this->chickenHeight-10 > this->platforms[i].y)
+			&& (this->yPos + this->chickenHeight-10 < this->platforms[i].y + this->platformHeight)
+			&& (this->dYPos > 0)) {
+			this->dYPos = -10;
+			this->score++;
+		}
+
+	}
+}
+
+void JumpingMinigame::displayText(sf::RenderTarget& target)
+{
+	this->text.setFont(this->font);
+	target.draw(this->text);
+}
+
+void JumpingMinigame::play(sf::RenderWindow& window) {
+	this->chicken.setPosition(this->xPos, this->yPos);
+	window.clear(sf::Color::White);
+	window.draw(this->background);
+	window.draw(this->chicken);
+	displayText(window);
+	for (int i = 0; i < 10; i++)
+	{
+		this->platform.setPosition(this->platforms[i].x, this->platforms[i].y);
+		window.draw(this->platform);
+	}
+	window.display();
+}
+
+void JumpingMinigame::start(sf::RenderWindow& window)
+{
+	srand(time(0));
+	window.create(sf::VideoMode(this->width, this->height), "Jumping_minigame", sf::Style::Titlebar | sf::Style::Close);
+	window.setFramerateLimit(60);
+	generatePlatformsPositions();
+	while (window.isOpen())
+	{
+
+		//text.setString(std::to_string(score));
+		//sf::Event e;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+		this->dYPos += fallingSpeed;
+		this->yPos += this->dYPos;
+
+		if (this->yPos > this->height - 30) {
+			end = true;
+			window.draw(gameOver);
+			window.display();
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				window.close();
+			}
+		}
+
+		if (this->yPos < this->screenBorder) {
+			updatePlatformsPositions();
+		}
+		moveChicken();
+		platformJump();
+		updateText();
+		displayText(window);
+		if (!this->end) {
+			play(window);
+		}
+	}
+}
+
+unsigned int JumpingMinigame::get_score() const
+{
+	return this->score;
+}
