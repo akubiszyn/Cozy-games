@@ -12,8 +12,8 @@ void Game::update_game()
 		if (this->is_minigame_chosen)
 		{
 			//this->choose_minigame(this->minigame_choice);
-			//this->minigame = std::make_unique<Clicking_minigame>(Clicking_minigame());
-			this->minigame->start(window);
+			this->minigame = std::make_unique<Clicking_minigame>(Clicking_minigame());
+			this->minigame->start(this->window);
 			this->is_minigame_chosen = false;
 			this->window.create(sf::VideoMode(1920, 992), "PROI GAME");
 			this->window.setFramerateLimit(30);
