@@ -7,11 +7,10 @@ class Player
 	bool moving = false;
 	sf::Texture texture;
 	sf::Sprite shape;
-	sf::RenderWindow& window;
 	void initSprite();
 	void initTexture();
 public:
-	Player(sf::RenderWindow&);
+	Player();
 	virtual ~Player() {}
 
 	//functions
