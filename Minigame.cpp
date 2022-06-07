@@ -29,7 +29,7 @@ void Game::initWindow()
 */
 void Clicking_minigame::setFonts()
 {
-	if (!this->font.loadFromFile("fonts/arial.ttf"))
+	if (!this->font.loadFromFile("fonts/edo.ttf"))
 	{
 		std::cout << "ERROR::GAME::INITFONTS::Failed to load font!" << std::endl;
 	}
@@ -110,7 +110,9 @@ void Clicking_minigame::Spawn_food_object(sf::RenderWindow& window)
 	);
 	*/
 	this->food_object.setTextureRect(sf::IntRect(0, 0, 100, 100));
-	this->food_object.setPosition(sf::Vector2f(static_cast<float>(rand() % static_cast<int>(window.getSize().x - this->food_object.getTextureRect().width)), 0.f));
+	unsigned int x = window.getSize().x / 30;
+	float scale_x = float(x) / float(this->food_object.getLocalBounds().width);
+	this->food_object.setPosition(sf::Vector2f(static_cast<float>(rand() % static_cast<int>(window.getSize().x - this->food_object.getTextureRect().width * scale_x)), 0.f));
 	//Randomize enemy type
 	int type = rand() % 8;
 
@@ -118,47 +120,56 @@ void Clicking_minigame::Spawn_food_object(sf::RenderWindow& window)
 	{
 	case 0:
 		this->food_object.setTexture(this->textures[0]);
-		this->food_object.setTextureRect(sf::IntRect(0, 0, 40, 40));
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 924, 1439));
+		this->scale(window, this->food_object, 45, 45);
 		//this->enemy.setFillColor(sf::Color::Magenta);
 		break;
 	case 1:
 		this->food_object.setTexture(this->textures[1]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 30, 30));
+		this->scale(window, this->food_object, 50, 50);
 		//this->enemy.setFillColor(sf::Color::Blue);
 		break;
 	case 2:
 		this->food_object.setTexture(this->textures[2]);
-		this->food_object.setTextureRect(sf::IntRect(0, 0, 50, 50));
+		this->food_object.setTextureRect(sf::IntRect(0, 0, 166, 184));
+		this->scale(window, this->food_object, 40, 40);
 		//this->enemy.setFillColor(sf::Color::Cyan);
 		break;
 	case 3:
 		this->food_object.setTexture(this->textures[3]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 70, 70));
+		this->scale(window, this->food_object, 35, 35);
 		//this->enemy.setFillColor(sf::Color::Red);
 		break;
 	case 4:
 		this->food_object.setTexture(this->textures[4]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 100, 100));
+		this->scale(window, this->food_object, 30, 30);
 		//this->enemy.setFillColor(sf::Color::Green);
 		break;
 	case 5:
 		this->food_object.setTexture(this->textures[5]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 39, 39));
+		this->scale(window, this->food_object, 25, 25);
 		//this->enemy.setFillColor(sf::Color::Green);
 		break;
 	case 6:
 		this->food_object.setTexture(this->textures[6]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 29, 29));
+		this->scale(window, this->food_object, 20, 20);
 		//this->enemy.setFillColor(sf::Color::Green);
 		break;
 	case 7:
 		this->food_object.setTexture(this->textures[7]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 49, 49));
+		this->scale(window, this->food_object, 15, 15);
 		//this->enemy.setFillColor(sf::Color::Green);
 		break;
 	default:
 		this->food_object.setTexture(this->textures[0]);
 		this->food_object.setTextureRect(sf::IntRect(0, 0, 40, 40));
+		this->scale(window, this->food_object, 45, 45);
 		//this->enemy.setFillColor(sf::Color::Yellow);
 		break;
 	}
@@ -324,9 +335,14 @@ void Clicking_minigame::updateFood(sf::RenderWindow& window)
 
 void Clicking_minigame::start(sf::RenderWindow& window)
 {
-	window.create(sf::VideoMode(800, 600), "Clicking_minigame", sf::Style::Titlebar | sf::Style::Close);
+	window.create(sf::VideoMode::getFullscreenModes()[0], "Clicking minigame", sf::Style::Fullscreen | sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(30);
 	std::srand(static_cast<unsigned int>(time(NULL)));
+	this->scale(window, this->background, 1, 1);
+	sf::Music music;
+	music.openFromFile("music/Clicking_minigame.ogg");
+	music.setLoop(true);
+	music.play();
 	while (window.isOpen() && !this->get_end())
 	{
 		while (window.pollEvent(this->event))
@@ -359,6 +375,7 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 		this->displayText(window);
 		window.display();
 	}
+	music.stop();
 }
 /*
 void Clicking_minigame::update(sf::RenderWindow& window)
@@ -397,6 +414,15 @@ void Clicking_minigame::displayFood(sf::RenderTarget& target)
 unsigned int Clicking_minigame::get_score() const
 {
 	return this->score;
+}
+
+void Clicking_minigame::scale(sf::RenderWindow& window, sf::Sprite& sprite, int divider_width, int divider_height)
+{
+	unsigned int x = window.getSize().x / divider_width;
+	unsigned int y = window.getSize().y / divider_height;
+	float scale_x = float(x) / float(sprite.getLocalBounds().width);
+	float scale_y = float(y) / float(sprite.getLocalBounds().height);
+	sprite.setScale(scale_x, scale_y);
 }
 /*
 void Clicking_minigame::display()

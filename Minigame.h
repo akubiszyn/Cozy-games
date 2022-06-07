@@ -32,6 +32,7 @@ private:
 
 	//Text
 	sf::Text text;
+	sf::Text end_game;
 
 	//Game logic
 	bool end;
@@ -51,6 +52,8 @@ private:
 	sf::Texture texture;
 	sf::Sprite background;
 	sf::Texture background_texture;
+	sf::Sprite end_screen;
+	sf::Texture edn_screen_texture;
 
 	//Private functions
 //void iniVariables();
@@ -79,8 +82,10 @@ public:
 	virtual void start(sf::RenderWindow&);
 	void displayText(sf::RenderTarget& target);
 	void displayFood(sf::RenderTarget& target);
+	void display_end_game(sf::RenderTarget& target);
 	//void display();
 	virtual unsigned int get_score() const;
+	void scale(sf::RenderWindow&, sf::Sprite&, int, int);
 };
 
 class Point { public: int x, y; };
