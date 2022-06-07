@@ -111,3 +111,109 @@ TEST_CASE("constructor_Game", "[constructors]")
 	Game game(window, 30);
 	REQUIRE(game.get_is_end() == false);
 }
+
+TEST_CASE("constructor_Chicken", "[constructors]")
+{
+	Chicken chicken("images/chicken_walk_left.png", 2, 2, 0, 0);
+	REQUIRE(chicken.get_music_path() == "music/chicken.ogg");
+	REQUIRE(chicken.get_Sprite().getTextureRect() == sf::IntRect(0, 0, 29, 48));
+	const sf::Vector2f& temp = chicken.get_Sprite().getPosition();
+	sf::Vector2f& non_const = const_cast<sf::Vector2f&>(temp);
+	REQUIRE(non_const == sf::Vector2f(0, 0));
+}
+
+TEST_CASE("constructor_Chicken_invalid_texture", "[constructors]")
+{
+	bool check = false;
+	try
+	{
+		Chicken("dhlkaksl", 2, 2, 0, 0);
+	}
+	catch (const TextureNotLoadedException& e)
+	{
+		REQUIRE(e.what() == "Game_square texture was not loaded.");
+		check = true;
+	}
+	REQUIRE(check);
+}
+
+TEST_CASE("constructor_Chicken_invalid_position", "[constructors]")
+{
+	bool check = false;
+	try
+	{
+		Chicken("images/chicken_walk_left.png", 2, 2, -10, 0);
+	}
+	catch (const InvalidPositionException& e)
+	{
+		REQUIRE(e.what() == "x < 0 or y < 0.");
+		check = true;
+	}
+	REQUIRE(check);
+}
+
+TEST_CASE("constructor_Chicken_invalid_position2", "[constructors]")
+{
+	bool check = false;
+	try
+	{
+		Chicken("images/chicken_walk_left.png", 2, 2, 10, -37);
+	}
+	catch (const InvalidPositionException& e)
+	{
+		REQUIRE(e.what() == "x < 0 or y < 0.");
+		check = true;
+	}
+	REQUIRE(check);
+}
+
+TEST_CASE("constructor_Chicken_invalid_position3", "[constructors]")
+{
+	bool check = false;
+	try
+	{
+		Chicken("images/chicken_walk_left.png", 2, 2, -29, -37);
+	}
+	catch (const InvalidPositionException& e)
+	{
+		REQUIRE(e.what() == "x < 0 or y < 0.");
+		check = true;
+	}
+	REQUIRE(check);
+}
+
+TEST_CASE("Chicken_move", "[Chicken_methods]")
+{
+	Chicken chicken("images/chicken_walk_left.png", 0, 2, 0, 0);
+	const sf::Vector2f& temp = chicken.get_Sprite().getPosition();
+	sf::Vector2f& non_const = const_cast<sf::Vector2f&>(temp);
+	REQUIRE(non_const == sf::Vector2f(0, 0));
+	chicken.move();
+	const sf::Vector2f& temp1 = chicken.get_Sprite().getPosition();
+	non_const = const_cast<sf::Vector2f&>(temp1);
+	REQUIRE(non_const == sf::Vector2f(2, 0));
+}
+
+TEST_CASE("Chicken_move_2", "[Chicken_methods]")
+{
+	Chicken chicken("images/chicken_walk_left.png", 4, 0, 0, 0);
+	const sf::Vector2f& temp = chicken.get_Sprite().getPosition();
+	sf::Vector2f& non_const = const_cast<sf::Vector2f&>(temp);
+	REQUIRE(non_const == sf::Vector2f(0, 0));
+	chicken.move();
+	const sf::Vector2f& temp1 = chicken.get_Sprite().getPosition();
+	non_const = const_cast<sf::Vector2f&>(temp1);
+	REQUIRE(non_const == sf::Vector2f(0, 4));
+}
+
+TEST_CASE("Chicken_move_3", "[Chicken_methods]")
+{
+	Chicken chicken("images/chicken_walk_left.png", 4, 2, 0, 0);
+	const sf::Vector2f& temp = chicken.get_Sprite().getPosition();
+	sf::Vector2f& non_const = const_cast<sf::Vector2f&>(temp);
+	REQUIRE(non_const == sf::Vector2f(0, 0));
+	chicken.move();
+	const sf::Vector2f& temp1 = chicken.get_Sprite().getPosition();
+	non_const = const_cast<sf::Vector2f&>(temp1);
+	REQUIRE(non_const == sf::Vector2f(2, 4));
+}

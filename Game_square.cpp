@@ -90,7 +90,7 @@ void Game_square::check_square_texture(std::string texture)
 		std::cerr << "TextureNotLoadedException " << e.what() << std::endl;
 		std::exit(-1);
 	}
-	
+
 }
 */
 /*
@@ -105,6 +105,6 @@ void Game_square::check_position(float x, float y)
 		std::cerr << "InvalidPositionException " << e.what() << std::endl;
 		std::exit(-2);
 	}
-	
+
 }
 */

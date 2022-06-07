@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map()), player(Player()), is_music_playing(false), is_background_music_playing(false), is_minigame_chosen(false), minigame_choice(0)
+Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map()), player(Player()), is_music_playing(false), is_background_music_playing(false), is_minigame_chosen(true), minigame_choice(0)
 {
 	this->window.setFramerateLimit(frame_limit);
 }

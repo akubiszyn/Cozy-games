@@ -93,7 +93,7 @@ bool Clicking_minigame::get_end() const
 }
 
 //Functions
-void Clicking_minigame::Spawn_enemy(sf::RenderWindow& window)
+void Clicking_minigame::Spawn_food_object(sf::RenderWindow& window)
 {
 	/*
 		@return void
@@ -207,7 +207,7 @@ void Clicking_minigame::updateText()
 	this->text.setString(ss.str());
 }
 
-void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
+void Clicking_minigame::updateFood(sf::RenderWindow& window)
 {
 	/**
 		@return void
@@ -223,7 +223,7 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 		if (this->food_timer >= this->food_timer_max)
 		{
 			//Spawn the enemy and reset the timer
-			this->Spawn_enemy(window);
+			this->Spawn_food_object(window);
 			this->food_timer = 0.f;
 		}
 		else
@@ -239,9 +239,9 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 
 		if (this->food[i].getPosition().y > window.getSize().y)
 		{
-			this->food.erase(this->food.begin() + i);
 			if (this->food[i].getTextureRect() != sf::IntRect(0, 0, 29, 29) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 39, 39) && this->food[i].getTextureRect() != sf::IntRect(0, 0, 49, 49))
 				this->to_lose -= 1;
+			this->food.erase(this->food.begin() + i);
 			std::cout << "to_lose: " << this->to_lose << "\n";
 		}
 	}
@@ -273,8 +273,10 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 50, 50))
 					{
 						this->score += 5;
-						if (this->movement_speed < 8.f && this->movement_speed != 0)
+						if (this->movement_speed < 5.f && this->movement_speed != 0)
 							this->movement_speed += 0.5;
+						else
+							this->movement_speed = 5.f;
 					}
 					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 70, 70))
 					{
@@ -301,6 +303,7 @@ void Clicking_minigame::updateEnemies(sf::RenderWindow& window)
 					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 49, 49))
 					{
 						this->to_lose -= 3;
+						this->movement_speed = 8.f;
 					}
 
 
@@ -345,14 +348,14 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 
 			this->updateText();
 
-			this->updateEnemies(window);
+			this->updateFood(window);
 		}
 		if (this->to_lose <= 0)
 			this->end = true;
 		window.clear();
 		this->background.setTexture(this->background_texture);
 		window.draw(this->background);
-		this->displayEnemies(window);
+		this->displayFood(window);
 		this->displayText(window);
 		window.display();
 	}
@@ -382,7 +385,7 @@ void Clicking_minigame::displayText(sf::RenderTarget& target)
 	target.draw(this->text);
 }
 
-void Clicking_minigame::displayEnemies(sf::RenderTarget& target)
+void Clicking_minigame::displayFood(sf::RenderTarget& target)
 {
 	//Rendering all the enemies
 	for (auto& e : this->food)
