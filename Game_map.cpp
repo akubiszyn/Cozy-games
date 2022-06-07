@@ -69,14 +69,14 @@ void Game_map::set_up_npc_positions()
 void Game_map::set_up_squares()
 {
 	auto cmpLambda = [](const sf::Vector2i& l, const sf::Vector2i& r)
-	{ 
+	{
 		if (l.x != r.x)
 			return (l.x < r.x);
 		else
 			return (l.y < r.y);
 	};
 	std::map<sf::Vector2i, std::string, decltype(cmpLambda)> Vector_comp_map(cmpLambda);
-	Vector_comp_map = { {} };
+	Vector_comp_map = {};
 	std::vector<sf::Vector2i> positions;
 	for (const std::pair<sf::Vector2i, std::string>& drawable : Vector_comp_map)
 	{
@@ -127,16 +127,16 @@ void Game_map::set_up_squares()
 					   { sf::Vector2i(10, 10), "images/drzewo.png" }, { sf::Vector2i(11, 10), "images/drzewo.png" },
 					   { sf::Vector2i(11, 11), "images/drzewo.png" }, {sf::Vector2i(12, 4), "images/niebieski_kwiatek.png" },
 					   {sf::Vector2i(13, 5), "images/niebieski_kwiatek.png" }, {sf::Vector2i(10, 6), "images/niebieski_kwiatek.png" },
-					   {sf::Vector2i(8, 8), "images/głaz.png" }, {sf::Vector2i(10, 4), "images/głaz.png" }, 
+					   {sf::Vector2i(8, 8), "images/głaz.png" }, {sf::Vector2i(10, 4), "images/głaz.png" },
 					   {sf::Vector2i(2, 10), "images/głaz.png" }, {sf::Vector2i(3, 5), "images/głaz.png" },
-					   {sf::Vector2i(5, 11), "images/house2_left_up.png" }, {sf::Vector2i(6, 11), "images/house2_right_up.png" }, 
+					   {sf::Vector2i(5, 11), "images/house2_left_up.png" }, {sf::Vector2i(6, 11), "images/house2_right_up.png" },
 					   {sf::Vector2i(5, 12), "images/house2_left_down.png" }, {sf::Vector2i(6, 12), "images/house2_right_down.png" },
-					   {sf::Vector2i(10, 4), "images/głaz.png" }, {sf::Vector2i(6, 3), "images/głaz.png" }, 
-					   {sf::Vector2i(10, 11), "images/opakowanie_pomidor.png" }, {sf::Vector2i(10, 12), "images/opakowanie_ziemniak.png" }, 
-					   {sf::Vector2i(0, 4), "images/drzewo.png" }, {sf::Vector2i(0, 10), "images/drzewo.png" }, 
-					   {sf::Vector2i(6, 0), "images/drzewo.png" }, {sf::Vector2i(15, 8), "images/drzewo.png" }, 
-					   {sf::Vector2i(15, 15), "images/drzewo.png" }, {sf::Vector2i(14, 15), "images/drzewo.png" }, 
-					   {sf::Vector2i(11, 15), "images/drzewo.png" }, {sf::Vector2i(10, 15), "images/drzewo.png" }, 
+					   {sf::Vector2i(10, 4), "images/głaz.png" }, {sf::Vector2i(6, 3), "images/głaz.png" },
+					   {sf::Vector2i(10, 11), "images/opakowanie_pomidor.png" }, {sf::Vector2i(10, 12), "images/opakowanie_ziemniak.png" },
+					   {sf::Vector2i(0, 4), "images/drzewo.png" }, {sf::Vector2i(0, 10), "images/drzewo.png" },
+					   {sf::Vector2i(6, 0), "images/drzewo.png" }, {sf::Vector2i(15, 8), "images/drzewo.png" },
+					   {sf::Vector2i(15, 15), "images/drzewo.png" }, {sf::Vector2i(14, 15), "images/drzewo.png" },
+					   {sf::Vector2i(11, 15), "images/drzewo.png" }, {sf::Vector2i(10, 15), "images/drzewo.png" },
 					   {sf::Vector2i(8, 15), "images/drzewo.png" }, {sf::Vector2i(13, 15), "images/drzewo.png" } };
 
 	std::vector<sf::Vector2i> positions2;
@@ -149,21 +149,21 @@ void Game_map::set_up_squares()
 	{
 		for (int j = 0; j < this->get_gridlength(); j++)
 		{
-				auto search_result = std::find(std::begin(positions), std::end(positions), sf::Vector2i(j, i));
-				auto search_result2 = std::find(std::begin(positions2), std::end(positions2), sf::Vector2i(j, i));
-				if (search_result != std::end(positions))
-				{
-					this->squares_first[i][j] = std::move(Game_square(Vector_comp_map.at(sf::Vector2i(j, i)), 120 * j, 62 * i, false));
-				}
-				else
-				{
-					this->squares_first[i][j] = std::move(Game_square("images/trawa.png", 120 * j, 62 * i, true));
-				}
-				if (search_result2 != std::end(positions2))
-				{
-					this->squares_first[i][j] = std::move(Game_square("images/trawa.png", 120 * j, 62 * i, true));
-					this->squares_second[i][j] = std::move(Game_square(Vector_comp_map2.at(sf::Vector2i(j, i)), 120 * j, 62 * i, false));
-				}
+			auto search_result = std::find(std::begin(positions), std::end(positions), sf::Vector2i(j, i));
+			auto search_result2 = std::find(std::begin(positions2), std::end(positions2), sf::Vector2i(j, i));
+			if (search_result != std::end(positions))
+			{
+				this->squares_first[i][j] = std::move(Game_square(Vector_comp_map.at(sf::Vector2i(j, i)), 120 * j, 62 * i, false));
+			}
+			else
+			{
+				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", 120 * j, 62 * i, true));
+			}
+			if (search_result2 != std::end(positions2))
+			{
+				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", 120 * j, 62 * i, true));
+				this->squares_second[i][j] = std::move(Game_square(Vector_comp_map2.at(sf::Vector2i(j, i)), 120 * j, 62 * i, false));
+			}
 		}
 	}
 
