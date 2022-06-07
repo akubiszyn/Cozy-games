@@ -31,8 +31,9 @@ std::vector<sf::Vector2i>& Game_map::get_npc_positions()
 	return this->npc_positions;
 }
 
-Game_map::Game_map()
+Game_map::Game_map(sf::RenderWindow& window) : window(window)
 {
+	this->set_window_size(this->window);
 	this->gridlength = 16;
 	this->gridheight = 16;
 	this->set_up_initial_state();
@@ -46,9 +47,9 @@ void Game_map::set_up_initial_state()
 	//this->player_position = sf::Vector2i(this->get_gridlength() - 1, this->get_gridheight() - 1);
 	this->set_up_npc_positions();
 	this->set_up_squares();
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 0, -2, 960, 807))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", -2, 0, 1080, 869))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 2, 0, 1200, 807))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 0, -2, 7, 13, this->window))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", -2, 0, 9, 14, this->window))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 2, 0, 8, 13, this->window))));
 	this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
@@ -145,6 +146,8 @@ void Game_map::set_up_squares()
 		positions2.push_back(drawable.first);
 	}
 
+	unsigned int width = this->get_window_size().x / 16;
+	unsigned int height = this->get_window_size().y / 16;
 	for (int i = 0; i < this->get_gridheight(); i++)
 	{
 		for (int j = 0; j < this->get_gridlength(); j++)
@@ -153,16 +156,16 @@ void Game_map::set_up_squares()
 			auto search_result2 = std::find(std::begin(positions2), std::end(positions2), sf::Vector2i(j, i));
 			if (search_result != std::end(positions))
 			{
-				this->squares_first[i][j] = std::move(Game_square(Vector_comp_map.at(sf::Vector2i(j, i)), 120 * j, 62 * i, false));
+				this->squares_first[i][j] = std::move(Game_square(Vector_comp_map.at(sf::Vector2i(j, i)), width, height, false, j, i));
 			}
 			else
 			{
-				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", 120 * j, 62 * i, true));
+				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", width , height, true, j, i));
 			}
 			if (search_result2 != std::end(positions2))
 			{
-				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", 120 * j, 62 * i, true));
-				this->squares_second[i][j] = std::move(Game_square(Vector_comp_map2.at(sf::Vector2i(j, i)), 120 * j, 62 * i, false));
+				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", width, height, true, j, i));
+				this->squares_second[i][j] = std::move(Game_square(Vector_comp_map2.at(sf::Vector2i(j, i)), width, height, false, j, i));
 			}
 		}
 	}
@@ -175,6 +178,8 @@ void Game_map::set_up_squares()
 			//Game_square& non_const = const_cast<Game_square&>(temp);
 			//non_const.get_Sprite_ref().setTexture(non_const.get_Texture_ref());
 			column.second.get_Sprite_ref().setTexture(column.second.get_Texture_ref());
+			//column.second.get_Sprite_ref().setScale(column.second.get_scale_x(), column.second.get_scale_y());
+			//column.second.get_Sprite().setScale(column.second.get_scale_x(), column.second.get_scale_y());
 		}
 	}
 	for (std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : this->get_squares_second())
@@ -185,6 +190,8 @@ void Game_map::set_up_squares()
 			//Game_square& non_const = const_cast<Game_square&>(temp);
 			//non_const.get_Sprite_ref().setTexture(non_const.get_Texture_ref());
 			column.second.get_Sprite_ref().setTexture(column.second.get_Texture_ref());
+			//column.second.get_Sprite_ref().setScale(column.second.get_scale_x(), column.second.get_scale_y());
+			//column.second.get_Sprite().setScale(column.second.get_scale_x(), column.second.get_scale_y());
 		}
 	}
 
@@ -241,4 +248,14 @@ bool Game_map::get_play_music() const
 unsigned int Game_map::get_minigame_choice() const
 {
 	return this->minigame_choice;
+}
+
+void Game_map::set_window_size(sf::RenderWindow& window)
+{
+	this->window_size = window.getSize();
+}
+
+sf::Vector2u Game_map::get_window_size() const
+{
+	return this->window_size;
 }

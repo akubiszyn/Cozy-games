@@ -7,10 +7,12 @@ private:
 	sf::Vector2f position;
 	sf::Texture square_texture;
 	sf::Sprite square_sprite;
+	float scale_x;
+	float scale_y;
 public:
 	Game_square();
-	Game_square(std::string, float, float, bool);
-	bool set_Sprite(std::string);
+	Game_square(std::string, unsigned int, unsigned int, bool, int, int);
+	bool set_Sprite(std::string, unsigned int, unsigned int);
 	sf::Sprite& get_Sprite_ref();
 	bool get_is_Accessable() const;
 	sf::Texture& get_Texture_ref();
@@ -22,4 +24,6 @@ public:
 	sf::Texture get_Texture() const;
 	//void check_square_texture(std::string);
 	//void check_position(float, float);
+	float get_scale_x() const;
+	float get_scale_y() const;
 };

@@ -14,9 +14,16 @@ void Chicken::set_Sprite(std::string texture)
 	this->set_Texture(texture);
 	this->sprite.setTexture(this->texture);
 	this->sprite.setTextureRect(sf::IntRect(0, 0, 29, 48));
+	unsigned int x = this->window.getSize().x / 16;
+	unsigned int y = this->window.getSize().y / 16;
+	float scale_x = float(x) / float(this->sprite.getLocalBounds().width);
+	float scale_y = float(y) / float(this->sprite.getLocalBounds().height);
+	scale_x = 0.6 * scale_x;
+	scale_y = 0.6 * scale_y;
+	this->sprite.setScale(scale_x, scale_y);
 }
 
-Chicken::Chicken(std::string texture, int move_up_down, int move_left_right, int x, int y): stop(false), moving_up_down(move_up_down), moving_left_right(move_left_right), distance(0)
+Chicken::Chicken(std::string texture, int move_up_down, int move_left_right, int x, int y, sf::RenderWindow& window): stop(false), moving_up_down(move_up_down), moving_left_right(move_left_right), distance(0), window(window)
 {
 	this->set_Sprite(texture);
 	this->currentFrame = sf::IntRect(0, 0, 29, 48);
@@ -60,7 +67,11 @@ void Chicken::set_position(float x, float y)
 	{
 		throw InvalidPositionException();
 	}
-	this->position = sf::Vector2f(x, y);
+	unsigned int x_w = this->window.getSize().x / 16;
+	unsigned int y_w = this->window.getSize().y / 16;
+	float scale_x = float(x_w) / this->sprite.getLocalBounds().width;
+	float scale_y = float(y_w) / this->sprite.getLocalBounds().height;
+	this->position = sf::Vector2f(sf::Vector2f(this->sprite.getLocalBounds().width * scale_x * x, this->sprite.getLocalBounds().height * scale_y * y));
 }
 
 sf::Vector2f Chicken::get_position() const

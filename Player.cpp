@@ -1,9 +1,13 @@
 #include "Player.h"
 
-Player::Player() {
+Player::Player(sf::RenderWindow& window): window(window) {
 	this->initTexture();
 	this->initSprite();
-	this->shape.setPosition(sf::Vector2f(1680, 497));
+	unsigned int x = this->window.getSize().x / 16;
+	unsigned int y = this->window.getSize().y / 16;
+	float scale_x = float(x) / this->shape.getLocalBounds().width;
+	float scale_y = float(y) / this->shape.getLocalBounds().height;
+	this->shape.setPosition(sf::Vector2f(this->shape.getLocalBounds().width * scale_x * 14, this->shape.getLocalBounds().height * scale_y * 8));
 }
 
 void Player::initSprite()
@@ -11,7 +15,13 @@ void Player::initSprite()
 	this->shape.setTexture(texture);
 	this->currentFrame = sf::IntRect(0, 0, 72, 50);
 	this->shape.setTextureRect(sf::IntRect(0, 0, 72, 50));
-	this->shape.setScale(1.0, 1.0);
+	unsigned int x = this-> window.getSize().x / 16;
+	unsigned int y = this->window.getSize().y / 16;
+	float scale_x = float(x) / float(this->shape.getLocalBounds().width);
+	float scale_y = float(y) / float(this->shape.getLocalBounds().height);
+	scale_x = 0.8 * scale_x;
+	scale_y = 0.8 * scale_y;
+	this->shape.setScale(scale_x, scale_y);
 }
 
 void Player::initTexture()

@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map()), player(Player()), is_music_playing(false), is_background_music_playing(false), is_minigame_chosen(true), minigame_choice(0)
+Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map(wind)), player(Player(wind)), is_music_playing(false), is_background_music_playing(false), is_minigame_chosen(false), minigame_choice(0)
 {
 	this->window.setFramerateLimit(frame_limit);
 }
@@ -15,7 +15,8 @@ void Game::update_game()
 			this->minigame = std::make_unique<Clicking_minigame>(Clicking_minigame());
 			this->minigame->start(this->window);
 			this->is_minigame_chosen = false;
-			this->window.create(sf::VideoMode(1920, 992), "PROI GAME");
+			this->window.create(sf::VideoMode::getFullscreenModes()[0], "PROI GAME", sf::Style::Fullscreen);
+
 			this->window.setFramerateLimit(30);
 		}
 		else

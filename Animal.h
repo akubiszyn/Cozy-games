@@ -26,8 +26,9 @@ private:
 	sf::Sprite sprite;
 	std::string music_path;
 	sf::Vector2f position;
+	sf::RenderWindow& window;
 public:
-	Chicken(std::string, int, int, int, int);
+	Chicken(std::string, int, int, int, int, sf::RenderWindow&);
 	void set_Sprite(std::string);
 	void set_Texture(std::string);
 	virtual void display(sf::RenderTarget&) const;
