@@ -33,26 +33,30 @@ bool Game_square::get_is_Accessable() const
 
 Game_square::Game_square()
 {
-	this->set_Sprite("images/trawa.png");
+	this->set_Sprite("images/grass.png", 120, 62);
 	this->set_position(0, 0);
 	this->square_sprite.setPosition(this->position);
 	this->isAccessable = true;
 }
 
-Game_square::Game_square(std::string texture, float x, float y, bool accessed)
+Game_square::Game_square(std::string texture, unsigned int square_width, unsigned int square_height, bool accessed, int width_multiply, int height_multiply)
 {
-	this->set_Sprite(texture);
-	this->set_position(x, y);
+	this->set_Sprite(texture, square_width, square_height);
+	this->set_position(this->get_Sprite().getLocalBounds().width * this->get_scale_x() * width_multiply, this->get_Sprite().getLocalBounds().height * this->get_scale_y() * height_multiply);
 	this->square_sprite.setPosition(this->position);
 	this->isAccessable = accessed;
 
 }
 
-bool Game_square::set_Sprite(std::string texture)
+bool Game_square::set_Sprite(std::string texture, unsigned int width, unsigned int height)
 {
 	this->set_Texture(texture);
 	this->square_sprite.setTexture(this->square_texture);
-	this->square_sprite.setTextureRect(sf::IntRect(0, 0, 120, 62));
+	float x = float(width) / float(this->square_sprite.getLocalBounds().width);
+	float y = float(height) / float(this->square_sprite.getLocalBounds().height);
+	this->scale_x = x;
+	this->scale_y = y;
+	this->square_sprite.setScale(x, y);
 	return true;
 }
 
@@ -77,6 +81,16 @@ void Game_square::set_Texture(std::string texture)
 		throw TextureNotLoadedException();
 	}
 	this->square_texture.setSmooth(true);
+}
+
+float Game_square::get_scale_x() const
+{
+	return this->scale_x;
+}
+
+float Game_square::get_scale_y() const
+{
+	return this->scale_y;
 }
 /*
 void Game_square::check_square_texture(std::string texture)
