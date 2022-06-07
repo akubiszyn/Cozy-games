@@ -20,11 +20,11 @@ public:
 
 class NPC : public Animal {
 	sf::Texture talkTexture;
-	bool startGame;
 public:
+	bool startGame;
 	NPC(std::string texture, float xPos, float yPos);
 	virtual ~NPC() {};
-	//virtual void talk();
+	virtual void talk(int index);
 
 };
 

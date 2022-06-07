@@ -38,7 +38,6 @@ Game_map::Game_map()
 	this->set_up_initial_state();
 	this->set_music_path("");
 	this->set_play_music(false);
-	this->minigame_choice = 0;
 }
 
 void Game_map::set_up_npc_positions()
@@ -60,9 +59,9 @@ void Game_map::set_up_initial_state()
 	this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_left.png", get_npc_positions()[0].x, get_npc_positions()[0].y)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_left.png", get_npc_positions()[1].x, get_npc_positions()[1].y)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_left.png", get_npc_positions()[2].x, get_npc_positions()[2].y)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[0].x, get_npc_positions()[0].y)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[1].x, get_npc_positions()[1].y)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[2].x, get_npc_positions()[2].y)));
 	this->get_npcs()[0]->get_Sprite().setTexture(this->get_npcs()[0]->get_Texture());
 	this->get_npcs()[1]->get_Sprite().setTexture(this->get_npcs()[1]->get_Texture());
 	this->get_npcs()[2]->get_Sprite().setTexture(this->get_npcs()[2]->get_Texture());
@@ -250,9 +249,4 @@ void Game_map::set_play_music(bool value)
 bool Game_map::get_play_music() const
 {
 	return this->play_music;
-}
-
-unsigned int Game_map::get_minigame_choice() const
-{
-	return this->minigame_choice;
 }

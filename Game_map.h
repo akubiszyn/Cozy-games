@@ -21,7 +21,7 @@ private:
 	void set_up_squares();
 	std::string music_path;
 	bool play_music;
-	unsigned int minigame_choice;
+
 public:
 	std::vector<sf::Vector2i>& get_npc_positions();
 	//sf::Vector2i get_player_position() const;
@@ -37,5 +37,4 @@ public:
 	std::string get_music_path() const;
 	void set_play_music(bool);
 	bool get_play_music() const;
-	unsigned int get_minigame_choice() const;
 };

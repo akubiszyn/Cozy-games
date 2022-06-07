@@ -84,54 +84,55 @@ public:
 };
 
 class Point { public: int x, y; };
-					class JumpingMinigame : public Minigame {
-						sf::Event event;
-						int width;
-						int height;
+class JumpingMinigame : public Minigame {
+	sf::Event event;
+	int width;
+	int height;
 
-						//Resources
-						sf::Font font;
+	//Resources
+	sf::Font font;
 
-						//Text
-						sf::Text text;
+	//Text
+	sf::Text text;
 
-						//Game logic
-						bool end;
-						unsigned int score;
-						int xPos;
-						int yPos;
-						int screenBorder;
-						int platformNumber;
-						float dXPos, dYPos, fallingSpeed;
-						int chickenWidth, chickenHeight;
-						int platformWidth, platformHeight;
+	//Game logic
+	bool end;
+	unsigned int score;
+	int xPos;
+	int yPos;
+	int screenBorder;
+	int platformNumber;
+	float dXPos, dYPos, fallingSpeed;
+	int chickenWidth, chickenHeight;
+	int platformWidth, platformHeight;
 
-						//Game objects
-						Point platforms[10];
-						sf::Texture backgroundT, platformT, chickenT, gameOverT;
-						sf::Sprite background, platform, chicken, gameOver;
+	//Game objects
+	Point platforms[10];
+	sf::Texture backgroundT, platformT, chickenT, gameOverT;
+	sf::Sprite background, platform, chicken, gameOver;
 
-						//private funs
+	//private funs
 
 
-					public:
-						void setFonts();
-						void setText();
-						//Constructors / Destructors
-						JumpingMinigame();
-						virtual ~JumpingMinigame();
+public:
+	void restartGame();
+	void setFonts();
+	void setText();
+	//Constructors / Destructors
+	JumpingMinigame();
+	virtual ~JumpingMinigame();
 
-						//Accessors
-						void updateText();
-						void start(sf::RenderWindow&);
-						void displayText(sf::RenderTarget& target);
-						// Game logic
-						void adjustPlatforms(float scale, int width, int height);
-						void adjustChicken(float scale, int width, int height);
-						void moveChicken();
-						void generatePlatformsPositions();
-						void updatePlatformsPositions();
-						void platformJump();
-						void play(sf::RenderWindow& window);
-						virtual unsigned int get_score() const;
-					};
+	//Accessors
+	void updateText();
+	void start(sf::RenderWindow&);
+	void displayText(sf::RenderTarget& target);
+	// Game logic
+	void adjustPlatforms(float scale, int width, int height);
+	void adjustChicken(float scale, int width, int height);
+	void moveChicken();
+	void generatePlatformsPositions();
+	void updatePlatformsPositions();
+	void platformJump();
+	void play(sf::RenderWindow& window);
+	virtual unsigned int get_score() const;
+};

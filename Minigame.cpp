@@ -555,9 +555,18 @@ void JumpingMinigame::play(sf::RenderWindow& window) {
 	window.display();
 }
 
+void JumpingMinigame::restartGame() {
+	this->xPos = 100;
+	this->yPos = 100;
+	this->dXPos = 0;
+	this->dYPos = 0;
+	this->end = false;
+	this->score = 0;
+}
+
 void JumpingMinigame::start(sf::RenderWindow& window)
 {
-	bool pressStart = false;
+	restartGame();
 	srand(time(0));
 	window.create(sf::VideoMode(this->width, this->height), "Jumping_minigame", sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(60);
@@ -593,7 +602,7 @@ void JumpingMinigame::start(sf::RenderWindow& window)
 		platformJump();
 		updateText();
 		displayText(window);
-		if (!this->end && pressStart) {
+		if (!this->end) {
 			play(window);
 		}
 	}

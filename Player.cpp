@@ -55,6 +55,16 @@ bool Player::check_collision(Game_map & map, float movement_x, float movement_y)
 			map.set_play_music(true);
 		}
 	}
+	for (const std::unique_ptr<NPC>& npc_ptr : map.get_npcs())
+	{
+		if (npc_ptr->get_Sprite().getGlobalBounds().intersects(check))
+		{
+			npc_ptr->startGame = true;
+			auto it = find(map.get_npcs().begin(), map.get_npcs().end(), npc_ptr);
+			int index = it - map.get_npcs().begin();
+			npc_ptr->talk(index);
+		}
+	}
 	return false;
 }
 
