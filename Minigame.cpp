@@ -41,6 +41,18 @@ void Clicking_minigame::setText()
 	this->text.setCharacterSize(24);
 	this->text.setFillColor(sf::Color::Black);
 	this->text.setString("NONE");
+	this->end_game.setCharacterSize(32);
+	this->end_game.setFillColor(sf::Color::Black);
+}
+
+void Clicking_minigame::make_end_game(sf::RenderWindow& window)
+{
+	std::stringstream ss;
+
+	ss << "Your Score: " << this->get_score() << std::endl << "Press Esc to continue.";
+	this->end_game.setFont(this->font);
+	this->end_game.setString(ss.str());
+	this->end_game.setPosition(float(window.getSize().x) / 2.f - this->end_game.getLocalBounds().width, float(window.getSize().y) / 2.f);
 }
 /*
 void Game::initEnemies()
@@ -269,7 +281,7 @@ void Clicking_minigame::updateFood(sf::RenderWindow& window)
 				if (this->food[i].getGlobalBounds().contains(this->mouse_general))
 				{
 					//Gain points
-					if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 40, 40))
+					if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 924, 1439))
 					{
 						this->score += 7;
 						if (this->movement_speed < 8.f && this->movement_speed != 0)
@@ -281,13 +293,13 @@ void Clicking_minigame::updateFood(sf::RenderWindow& window)
 						if (this->movement_speed < 8.f && this->movement_speed != 0)
 							this->movement_speed += 0.5;
 					}
-					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 50, 50))
+					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 166, 184))
 					{
 						this->score += 5;
-						if (this->movement_speed < 5.f && this->movement_speed != 0)
+						if (this->movement_speed < 2.f && this->movement_speed != 0)
 							this->movement_speed += 0.5;
 						else
-							this->movement_speed = 5.f;
+							this->movement_speed = 2.f;
 					}
 					else if (this->food[i].getTextureRect() == sf::IntRect(0, 0, 70, 70))
 					{
@@ -354,7 +366,7 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 				break;
 			case sf::Event::KeyPressed:
 				if (this->event.key.code == sf::Keyboard::Escape)
-					window.close();
+					this->end = true;
 				break;
 			}
 		}
@@ -374,6 +386,31 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 		this->displayFood(window);
 		this->displayText(window);
 		window.display();
+	}
+	this->make_end_game(window);
+	this->background.setTexture(this->background_texture);
+	window.draw(this->background);
+	window.draw(this->end_game);
+	window.display();
+	bool wait = true;
+	while (wait)
+	{
+		while (window.isOpen() && wait)
+		{
+			while (window.pollEvent(this->event))
+			{
+				switch (this->event.type)
+				{
+				case sf::Event::Closed:
+					window.close();
+					break;
+				case sf::Event::KeyPressed:
+					if (this->event.key.code == sf::Keyboard::Escape)
+						wait = false;
+					break;
+				}
+			}
+		}
 	}
 	music.stop();
 }

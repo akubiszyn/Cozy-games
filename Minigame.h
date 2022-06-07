@@ -86,6 +86,7 @@ public:
 	//void display();
 	virtual unsigned int get_score() const;
 	void scale(sf::RenderWindow&, sf::Sprite&, int, int);
+	void make_end_game(sf::RenderWindow&);
 };
 
 class Point { public: int x, y; };
