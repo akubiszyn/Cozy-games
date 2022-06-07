@@ -517,10 +517,10 @@ void JumpingMinigame::updatePlatformsPositions() {
 
 void JumpingMinigame::platformJump() {
 	for (int i = 0; i < 10; i++) {
-		if ((this->xPos + this->chickenWidth/2 > this->platforms[i].x) 
-			&& (this->xPos + this->chickenWidth/4 < this->platforms[i].x + this->platformWidth) 
-			&& (this->yPos + this->chickenHeight-10 > this->platforms[i].y)
-			&& (this->yPos + this->chickenHeight-10 < this->platforms[i].y + this->platformHeight)
+		if ((this->xPos + this->chickenWidth / 2 > this->platforms[i].x)
+			&& (this->xPos + this->chickenWidth / 4 < this->platforms[i].x + this->platformWidth)
+			&& (this->yPos + this->chickenHeight - 10 > this->platforms[i].y)
+			&& (this->yPos + this->chickenHeight - 10 < this->platforms[i].y + this->platformHeight)
 			&& (this->dYPos > 0)) {
 			this->dYPos = -10;
 			this->score++;
@@ -538,12 +538,15 @@ void JumpingMinigame::displayText(sf::RenderTarget& target)
 void JumpingMinigame::play(sf::RenderWindow& window) {
 	this->chicken.setPosition(this->xPos, this->yPos);
 	window.clear(sf::Color::White);
+	this->background.setTexture(this->backgroundT);
 	window.draw(this->background);
+	this->chicken.setTexture(this->chickenT);
 	window.draw(this->chicken);
 	displayText(window);
 	for (int i = 0; i < 10; i++)
 	{
 		this->platform.setPosition(this->platforms[i].x, this->platforms[i].y);
+		this->platform.setTexture(this->platformT);
 		window.draw(this->platform);
 	}
 	window.display();
@@ -570,6 +573,7 @@ void JumpingMinigame::start(sf::RenderWindow& window)
 
 		if (this->yPos > this->height - 30) {
 			end = true;
+			this->gameOver.setTexture(this->gameOverT);
 			window.draw(gameOver);
 			window.display();
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
