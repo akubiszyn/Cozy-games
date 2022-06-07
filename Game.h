@@ -10,8 +10,10 @@ private:
 	Player player;
 	bool is_music_playing;
 	bool is_background_music_playing;
+	bool is_minigame_chosen;
+	unsigned int minigame_choice;
 	sf::Music music;
-	std::vector<std::unique_ptr<Minigame>> minigames;
+	std::unique_ptr<Minigame> minigame;
 	//void choose_minigame();
 public:
 	Game(sf::RenderWindow&, unsigned int);

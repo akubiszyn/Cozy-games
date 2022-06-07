@@ -39,14 +39,7 @@ Game_map::Game_map(sf::RenderWindow& window) : window(window)
 	this->set_up_initial_state();
 	this->set_music_path("");
 	this->set_play_music(false);
-}
-
-void Game_map::set_up_npc_positions()
-{
-	this->get_npc_positions().clear();
-	this->get_npc_positions().push_back(sf::Vector2i(0, 0));
-	this->get_npc_positions().push_back(sf::Vector2i(500, 500));
-	this->get_npc_positions().push_back(sf::Vector2i(200, 300));
+	this->minigame_choice = 0;
 }
 
 void Game_map::set_up_initial_state()
@@ -60,14 +53,18 @@ void Game_map::set_up_initial_state()
 	this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[0].x, get_npc_positions()[0].y)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[1].x, get_npc_positions()[1].y)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[2].x, get_npc_positions()[2].y)));
-	this->get_npcs()[0]->get_Sprite().setTexture(this->get_npcs()[0]->get_Texture());
-	this->get_npcs()[1]->get_Sprite().setTexture(this->get_npcs()[1]->get_Texture());
-	this->get_npcs()[2]->get_Sprite().setTexture(this->get_npcs()[2]->get_Texture());
-
 }
+
+void Game_map::set_up_npc_positions()
+{
+	this->get_npc_positions().clear();
+	/*
+	this->get_npc_positions().push_back(sf::Vector2i(0, 2));
+	this->get_npc_positions().push_back(sf::Vector2i(6, 0));
+	this->get_npc_positions().push_back(sf::Vector2i(2, 7));
+	*/
+}
+
 
 
 void Game_map::set_up_squares()
@@ -131,11 +128,11 @@ void Game_map::set_up_squares()
 					   { sf::Vector2i(10, 10), "images/drzewo.png" }, { sf::Vector2i(11, 10), "images/drzewo.png" },
 					   { sf::Vector2i(11, 11), "images/drzewo.png" }, {sf::Vector2i(12, 4), "images/niebieski_kwiatek.png" },
 					   {sf::Vector2i(13, 5), "images/niebieski_kwiatek.png" }, {sf::Vector2i(10, 6), "images/niebieski_kwiatek.png" },
-					   {sf::Vector2i(8, 8), "images/glaz.png" }, {sf::Vector2i(10, 4), "images/glaz.png" },
-					   {sf::Vector2i(2, 10), "images/glaz.png" }, {sf::Vector2i(3, 5), "images/glaz.png" },
+					   {sf::Vector2i(8, 8), "images/g³az.png" }, {sf::Vector2i(10, 4), "images/g³az.png" },
+					   {sf::Vector2i(2, 10), "images/g³az.png" }, {sf::Vector2i(3, 5), "images/g³az.png" },
 					   {sf::Vector2i(5, 11), "images/house2_left_up.png" }, {sf::Vector2i(6, 11), "images/house2_right_up.png" },
 					   {sf::Vector2i(5, 12), "images/house2_left_down.png" }, {sf::Vector2i(6, 12), "images/house2_right_down.png" },
-					   {sf::Vector2i(10, 4), "images/glaz.png" }, {sf::Vector2i(6, 3), "images/glaz.png" },
+					   {sf::Vector2i(10, 4), "images/g³az.png" }, {sf::Vector2i(6, 3), "images/g³az.png" },
 					   {sf::Vector2i(10, 11), "images/opakowanie_pomidor.png" }, {sf::Vector2i(10, 12), "images/opakowanie_ziemniak.png" },
 					   {sf::Vector2i(0, 4), "images/drzewo.png" }, {sf::Vector2i(0, 10), "images/drzewo.png" },
 					   {sf::Vector2i(6, 0), "images/drzewo.png" }, {sf::Vector2i(15, 8), "images/drzewo.png" },
@@ -148,9 +145,9 @@ void Game_map::set_up_squares()
 	{
 		positions2.push_back(drawable.first);
 	}
+
 	unsigned int width = this->get_window_size().x / 16;
 	unsigned int height = this->get_window_size().y / 16;
-
 	for (int i = 0; i < this->get_gridheight(); i++)
 	{
 		for (int j = 0; j < this->get_gridlength(); j++)
@@ -163,11 +160,10 @@ void Game_map::set_up_squares()
 			}
 			else
 			{
-				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", width, height, true, j, i));
+				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", width , height, true, j, i));
 			}
 			if (search_result2 != std::end(positions2))
 			{
-
 				this->squares_first[i][j] = std::move(Game_square("images/trawa.png", width, height, true, j, i));
 				this->squares_second[i][j] = std::move(Game_square(Vector_comp_map2.at(sf::Vector2i(j, i)), width, height, false, j, i));
 			}
@@ -182,6 +178,8 @@ void Game_map::set_up_squares()
 			//Game_square& non_const = const_cast<Game_square&>(temp);
 			//non_const.get_Sprite_ref().setTexture(non_const.get_Texture_ref());
 			column.second.get_Sprite_ref().setTexture(column.second.get_Texture_ref());
+			//column.second.get_Sprite_ref().setScale(column.second.get_scale_x(), column.second.get_scale_y());
+			//column.second.get_Sprite().setScale(column.second.get_scale_x(), column.second.get_scale_y());
 		}
 	}
 	for (std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : this->get_squares_second())
@@ -192,6 +190,8 @@ void Game_map::set_up_squares()
 			//Game_square& non_const = const_cast<Game_square&>(temp);
 			//non_const.get_Sprite_ref().setTexture(non_const.get_Texture_ref());
 			column.second.get_Sprite_ref().setTexture(column.second.get_Texture_ref());
+			//column.second.get_Sprite_ref().setScale(column.second.get_scale_x(), column.second.get_scale_y());
+			//column.second.get_Sprite().setScale(column.second.get_scale_x(), column.second.get_scale_y());
 		}
 	}
 
@@ -213,26 +213,16 @@ void Game_map::update_game_map(sf::RenderTarget& window)
 			window.draw(column.second.get_Sprite());
 		}
 	}
-	for (const std::unique_ptr<NPC>& npc : this->get_npcs())
-	{
-		npc->display(window);
-	}
-	for (const std::unique_ptr<Chicken>& animal_ptr : this->get_animals())
+	for (const std::unique_ptr<Animal>& animal_ptr : this->get_animals())
 	{
 		animal_ptr->display(window);
 		animal_ptr->move();
 	}
-
 }
 
-std::vector<std::unique_ptr<Chicken>>& Game_map::get_animals()
+std::vector<std::unique_ptr<Animal>>& Game_map::get_animals()
 {
 	return this->animals;
-}
-
-std::vector<std::unique_ptr<NPC>>& Game_map::get_npcs()
-{
-	return this->npcs;
 }
 
 void Game_map::set_music_path(std::string text)
@@ -255,6 +245,11 @@ bool Game_map::get_play_music() const
 	return this->play_music;
 }
 
+unsigned int Game_map::get_minigame_choice() const
+{
+	return this->minigame_choice;
+}
+
 void Game_map::set_window_size(sf::RenderWindow& window)
 {
 	this->window_size = window.getSize();
@@ -264,4 +259,3 @@ sf::Vector2u Game_map::get_window_size() const
 {
 	return this->window_size;
 }
-

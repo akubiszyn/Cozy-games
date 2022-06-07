@@ -9,7 +9,6 @@ private:
 	sf::Sprite square_sprite;
 	float scale_x;
 	float scale_y;
-
 public:
 	Game_square();
 	Game_square(std::string, unsigned int, unsigned int, bool, int, int);
@@ -23,9 +22,8 @@ public:
 	void set_is_Accessable(bool);
 	sf::Sprite get_Sprite() const;
 	sf::Texture get_Texture() const;
-	float get_scale_x() const;
-	float get_scale_y() const;
-
 	//void check_square_texture(std::string);
 	//void check_position(float, float);
+	float get_scale_x() const;
+	float get_scale_y() const;
 };

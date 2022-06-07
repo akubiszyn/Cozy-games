@@ -57,7 +57,6 @@ bool Game_square::set_Sprite(std::string texture, unsigned int width, unsigned i
 	this->scale_x = x;
 	this->scale_y = y;
 	this->square_sprite.setScale(x, y);
-
 	return true;
 }
 
@@ -93,7 +92,6 @@ float Game_square::get_scale_y() const
 {
 	return this->scale_y;
 }
-
 /*
 void Game_square::check_square_texture(std::string texture)
 {
