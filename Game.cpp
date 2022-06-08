@@ -55,7 +55,7 @@ void Game::update_game()
 					}
 					if (this->event.type == sf::Event::KeyPressed)
 					{
-						if (this->event.key.code == sf::Keyboard::Escape)
+						if (this->event.key.code == sf::Keyboard::Tab)
 						{
 							this->is_end = true;
 							this->window.close();
