@@ -17,8 +17,8 @@ void NPC::set_Sprite(std::string texture)
 	this->get_Sprite().setTexture(this->texture);
 	this->get_Sprite().setTextureRect(sf::IntRect(0, 0, this->width, this->height));
 	this->sprite.setPosition(sf::Vector2f(0, 0));
-	unsigned int x = this->window.getSize().x / 16;
-	unsigned int y = this->window.getSize().y / 16;
+	unsigned int x = this->window_size.x / 16;
+	unsigned int y = this->window_size.y / 16;
 	float scale_x = float(x) / float(this->sprite.getLocalBounds().width);
 	float scale_y = float(y) / float(this->sprite.getLocalBounds().height);
 	scale_x = 0.6 * scale_x;
@@ -32,8 +32,8 @@ void Chicken::set_Sprite(std::string texture)
 	this->get_Sprite().setTexture(this->texture);
 	this->get_Sprite().setTextureRect(sf::IntRect(0, 0, this->width, this->height));
 	this->sprite.setPosition(sf::Vector2f(0, 0));
-	unsigned int x = this->window.getSize().x / 16;
-	unsigned int y = this->window.getSize().y / 16;
+	unsigned int x = this->window_size.x / 16;
+	unsigned int y = this->window_size.y / 16;
 	float scale_x = float(x) / float(this->sprite.getLocalBounds().width);
 	float scale_y = float(y) / float(this->sprite.getLocalBounds().height);
 	scale_x = 0.6 * scale_x;
@@ -49,8 +49,8 @@ void Chicken::set_position(float x, float y)
 	{
 		throw InvalidPositionException();
 	}
-	unsigned int x_w = this->window.getSize().x / 16;
-	unsigned int y_w = this->window.getSize().y / 16;
+	unsigned int x_w = this->window_size.x / 16;
+	unsigned int y_w = this->window_size.y / 16;
 	float scale_x = float(x_w) / this->sprite.getLocalBounds().width;
 	float scale_y = float(y_w) / this->sprite.getLocalBounds().height;
 	this->position = sf::Vector2f(sf::Vector2f(this->sprite.getLocalBounds().width * scale_x * x, this->sprite.getLocalBounds().height * scale_y * y));
@@ -62,8 +62,8 @@ void NPC::set_position(float x, float y)
 	{
 		throw InvalidPositionException();
 	}
-	unsigned int x_w = this->window.getSize().x / 16;
-	unsigned int y_w = this->window.getSize().y / 16;
+	unsigned int x_w = this->window_size.x / 16;
+	unsigned int y_w = this->window_size.y / 16;
 	float scale_x = float(x_w) / this->sprite.getLocalBounds().width;
 	float scale_y = float(y_w) / this->sprite.getLocalBounds().height;
 	this->position = sf::Vector2f(sf::Vector2f(this->sprite.getLocalBounds().width * scale_x * x, this->sprite.getLocalBounds().height * scale_y * y));
@@ -86,7 +86,7 @@ void Creature::display(sf::RenderTarget& window) const
 }
 
 
-NPC::NPC(std::string texture, float xPos, float yPos, sf::RenderWindow& window) : window(window) {
+NPC::NPC(std::string texture, float xPos, float yPos, sf::Vector2u window_size) : window_size(window_size) {
 	this->width = 72;
 	this->height = 50;
 	this->set_Sprite(texture);
@@ -132,7 +132,7 @@ void NPC::talk(int index) {
 
 }
 
-Chicken::Chicken(std::string texture, int move_up_down, int move_left_right, int x, int y, sf::RenderWindow& window) : stop(false), moving_up_down(move_up_down), moving_left_right(move_left_right), distance(0), window(window) {
+Chicken::Chicken(std::string texture, int move_up_down, int move_left_right, int x, int y, sf::Vector2u window_size) : stop(false), moving_up_down(move_up_down), moving_left_right(move_left_right), distance(0), window_size(window_size) {
 	this->width = 29;
 	this->height = 48;
 	this->set_Sprite(texture);

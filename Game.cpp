@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(Game_map(wind)), player(Player(wind)), is_music_playing(false), is_background_music_playing(false)
+Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(), player(Player(wind.getSize(), sf::Vector2i(14, 8), sf::Vector2i(72, 50), 16, 32, 0.8)), is_music_playing(false), is_background_music_playing(false)
 {
 	this->window.setFramerateLimit(frame_limit);
 }
@@ -18,7 +18,7 @@ void Game::update_game()
 			if (npc_ptr->startGame)
 			{
 				npc_ptr->startGame = false;
-				auto it = find(map.get_npcs().begin(), map.get_npcs().end(), npc_ptr);
+				auto it = std::find(map.get_npcs().begin(), map.get_npcs().end(), npc_ptr);
 				int index = it - map.get_npcs().begin();
 				this->music.stop();
 				this->minigames[index]->start(this->window);
@@ -68,7 +68,14 @@ void Game::update_game()
 				}
 				this->window.clear();
 				this->map.update_game_map(this->window);
-				this->player.updateMovement(this->map);
+				sf::Vector2f vec = this->player.updateMovement();
+				if (this->map.check_collision(this->player))
+				{
+					if(vec.x != 0)
+						this->player.get_sprite_ref().move(-this->player.get_movement_x(), 0.f);
+					else
+						this->player.get_sprite_ref().move(0.f , -this->player.get_movement_y());
+				}
 				this->player.render(this->window);
 				this->window.display();
 			}

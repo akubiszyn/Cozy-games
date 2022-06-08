@@ -31,9 +31,10 @@ std::vector<sf::Vector2i>& Game_map::get_npc_positions()
 	return this->npc_positions;
 }
 
-Game_map::Game_map(sf::RenderWindow& window) : window(window)
+Game_map::Game_map()
 {
-	this->set_window_size(this->window);
+	this->window_size = sf::Vector2u(sf::VideoMode::getFullscreenModes()[0].width, sf::VideoMode::getFullscreenModes()[0].height);
+	//this->set_window_size(this->window_size);
 	this->gridlength = 16;
 	this->gridheight = 16;
 	this->set_up_initial_state();
@@ -51,24 +52,94 @@ void Game_map::set_up_npc_positions()
 
 void Game_map::set_up_initial_state()
 {
-	//this->player_position = sf::Vector2i(this->get_gridlength() - 1, this->get_gridheight() - 1);
+	this->player_position = sf::Vector2f(14, 8);
 	this->set_up_npc_positions();
 	this->set_up_squares();
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 0, -16, 7, 13, this->window))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", -16, 0, 9, 14, this->window))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 16, 0, 8, 13, this->window))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 0, -16, 7, 13, this->window_size))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", -16, 0, 9, 14, this->window_size))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 16, 0, 8, 13, this->window_size))));
 	this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[0].x, get_npc_positions()[0].y, this->window)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[1].x, get_npc_positions()[1].y, this->window)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[2].x, get_npc_positions()[2].y, this->window)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[0].x, get_npc_positions()[0].y, this->window_size)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[1].x, get_npc_positions()[1].y, this->window_size)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[2].x, get_npc_positions()[2].y, this->window_size)));
 	this->get_npcs()[0]->get_Sprite().setTexture(this->get_npcs()[0]->get_Texture());
 	this->get_npcs()[1]->get_Sprite().setTexture(this->get_npcs()[1]->get_Texture());
 	this->get_npcs()[2]->get_Sprite().setTexture(this->get_npcs()[2]->get_Texture());
 
 }
 
+bool Game_map::check_collision(const Player& player)
+{
+	bool cont = false;
+	sf::FloatRect player_rect = player.get_sprite().getGlobalBounds();
+	sf::FloatRect check = player_rect;//sf::FloatRect(player_rect.left + player.get_movement_x(), player_rect.top + player.get_movement_y(), player_rect.width, player_rect.height);
+	for (const std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : this->get_squares_first())
+	{
+		for (const std::pair<const unsigned int, Game_square>& column : row.second)
+		{
+			sf::FloatRect square = column.second.get_Sprite().getGlobalBounds();
+			if (square.intersects(check) && column.second.get_is_Accessable() == false)
+			{
+				return true;
+			}
+		}
+	}
+	for (const std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : this->get_squares_second())
+	{
+		for (const std::pair<const unsigned int, Game_square>& column : row.second)
+		{
+			sf::FloatRect square = column.second.get_Sprite().getGlobalBounds();
+			if (square.intersects(check) && column.second.get_is_Accessable() == false)
+			{
+				return true;
+			}
+		}
+	}
+	for (const std::unique_ptr<Chicken>& animal_ptr : this->get_animals())
+	{
+		if (animal_ptr->get_Sprite().getGlobalBounds().intersects(check))
+		{
+			animal_ptr->stop_now(true);
+			this->set_music_path(animal_ptr->get_music_path());
+			this->set_play_music(true);
+		}
+	}
+	for (const std::unique_ptr<NPC>& npc_ptr : this->get_npcs())
+	{
+		if (npc_ptr->get_Sprite().getGlobalBounds().intersects(check))
+		{
+			npc_ptr->startGame = true;
+			auto it = std::find(this->get_npcs().begin(), this->get_npcs().end(), npc_ptr);
+			int index = it - this->get_npcs().begin();
+			npc_ptr->talk(index);
+			return true;
+		}
+	}
+
+	for (const std::unique_ptr<Chicken>& animal_ptr : this->get_animals())
+	{
+		if (!animal_ptr->get_Sprite().getGlobalBounds().intersects(player.get_sprite().getGlobalBounds()))
+		{
+			animal_ptr->stop_now(false);
+		}
+		else
+		{
+			cont = true;
+		}
+	}
+	if (!cont)
+	{
+		this->set_play_music(false);
+	}
+	return false;
+}
+
+void Game_map::update_player_pos(sf::Vector2f new_pos)
+{
+	this->player_position = new_pos;
+}
 
 void Game_map::set_up_squares()
 {
@@ -148,8 +219,8 @@ void Game_map::set_up_squares()
 	{
 		positions2.push_back(drawable.first);
 	}
-	unsigned int width = this->get_window_size().x / 16;
-	unsigned int height = this->get_window_size().y / 16;
+	unsigned int width = this->get_window_size().x / this->gridlength;
+	unsigned int height = this->get_window_size().y / this->gridheight;
 
 	for (int i = 0; i < this->get_gridheight(); i++)
 	{
@@ -254,12 +325,12 @@ bool Game_map::get_play_music() const
 {
 	return this->play_music;
 }
-
+/*
 void Game_map::set_window_size(sf::RenderWindow& window)
 {
 	this->window_size = window.getSize();
 }
-
+*/
 sf::Vector2u Game_map::get_window_size() const
 {
 	return this->window_size;
@@ -267,9 +338,4 @@ sf::Vector2u Game_map::get_window_size() const
 
 #include "Game_map.h"
 
-/*
-sf::Vector2i Game_map::get_player_position() const
-{
-	return this->player_position;
-}
-*/
+

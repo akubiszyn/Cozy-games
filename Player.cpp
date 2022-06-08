@@ -1,28 +1,30 @@
 #include "Player.h"
 
-Player::Player(sf::RenderWindow& window) : window(window) {
+Player::Player(sf::Vector2u vec, sf::Vector2i pos, sf::Vector2i shape_size, unsigned int scale_divider, unsigned int move_divider, float shape_in_square_divider) : window_size(vec) {
+	this->shape_size = shape_size;
+	this->scale_divider = scale_divider;
+	this->move_divider = move_divider;
+	this->pos = pos;
+	this->shape_in_square_divider = shape_in_square_divider;
 	this->initTexture();
 	this->initSprite();
-	unsigned int x = this->window.getSize().x / 16;
-	unsigned int y = this->window.getSize().y / 16;
-	float scale_x = float(x) / this->shape.getLocalBounds().width;
-	float scale_y = float(y) / this->shape.getLocalBounds().height;
-	this->shape.setPosition(sf::Vector2f(this->shape.getLocalBounds().width * scale_x * 14, this->shape.getLocalBounds().height * scale_y * 8));
-
+	this->movement_x = this->shape.getLocalBounds().width * this->shape.getScale().x / this->move_divider;
+	this->movement_y = this->shape.getLocalBounds().height * this->shape.getScale().y / this->move_divider;
+	this->shape.setPosition(sf::Vector2f(this->shape.getLocalBounds().width * this->scale_x * this->pos.x, this->shape.getLocalBounds().height * this->scale_y * this->pos.y));
 }
 
 void Player::initSprite()
 {
 	this->shape.setTexture(texture);
-	this->currentFrame = sf::IntRect(0, 0, 72, 50);
-	this->shape.setTextureRect(sf::IntRect(0, 0, 72, 50));
-	unsigned int x = this->window.getSize().x / 16;
-	unsigned int y = this->window.getSize().y / 16;
-	float scale_x = float(x) / float(this->shape.getLocalBounds().width);
-	float scale_y = float(y) / float(this->shape.getLocalBounds().height);
-	scale_x = 0.8 * scale_x;
-	scale_y = 0.8 * scale_y;
-	this->shape.setScale(scale_x, scale_y);
+	unsigned int x = this->window_size.x / this->scale_divider;
+	unsigned int y = this->window_size.y / this->scale_divider;
+	this->scale_x = float(x) / float(this->shape_size.x);
+	this->scale_y = float(y) / float(this->shape_size.y);
+	this->currentFrame = sf::IntRect(0, 0, this->shape_size.x, this->shape_size.y);
+	this->shape.setTextureRect(sf::IntRect(0, 0, this->shape_size.x, this->shape_size.y));
+	float temp_scale_x = this->shape_in_square_divider * this->scale_x;
+	float temp_scale_y = this->shape_in_square_divider * this->scale_y;
+	this->shape.setScale(temp_scale_x, temp_scale_y);
 
 }
 
@@ -31,110 +33,76 @@ void Player::initTexture()
 	this->texture.loadFromFile("images/walk_leftm.png");
 }
 
-
-bool Player::check_collision(Game_map& map, float movement_x, float movement_y)
+float Player::get_movement_x() const
 {
-	sf::FloatRect player_rect = this->shape.getGlobalBounds();
-	sf::FloatRect check = sf::FloatRect(player_rect.left + movement_x, player_rect.top + movement_y, player_rect.width, player_rect.height);
-	for (const std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : map.get_squares_first())
-	{
-		for (const std::pair<const unsigned int, Game_square>& column : row.second)
-		{
-			sf::FloatRect square = column.second.get_Sprite().getGlobalBounds();
-			if (square.intersects(check) && column.second.get_is_Accessable() == false)
-			{
-				return true;
-			}
-		}
-	}
-	for (const std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : map.get_squares_second())
-	{
-		for (const std::pair<const unsigned int, Game_square>& column : row.second)
-		{
-			sf::FloatRect square = column.second.get_Sprite().getGlobalBounds();
-			if (square.intersects(check) && column.second.get_is_Accessable() == false)
-			{
-				return true;
-			}
-		}
-	}
-	for (const std::unique_ptr<Chicken>& animal_ptr : map.get_animals())
-	{
-		if (animal_ptr->get_Sprite().getGlobalBounds().intersects(check))
-		{
-			animal_ptr->stop_now(true);
-			map.set_music_path(animal_ptr->get_music_path());
-			map.set_play_music(true);
-		}
-	}
-	for (const std::unique_ptr<NPC>& npc_ptr : map.get_npcs())
-	{
-		if (npc_ptr->get_Sprite().getGlobalBounds().intersects(check))
-		{
-			npc_ptr->startGame = true;
-			auto it = find(map.get_npcs().begin(), map.get_npcs().end(), npc_ptr);
-			int index = it - map.get_npcs().begin();
-			npc_ptr->talk(index);
-		}
-	}
-	return false;
+	return this->movement_x;
 }
 
-void Player::updateMovement(Game_map& map) {
-	bool cont = false;
+float Player::get_movement_y() const
+{
+	return this->movement_y;
+}
+
+sf::Sprite& Player::get_sprite_ref()
+{
+	return this->shape;
+}
+
+sf::Vector2f Player::updateMovement() {
 	this->moving = false;
+	sf::Vector2f to_return;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		if (!this->check_collision(map, 0.0f, -this->shape.getLocalBounds().height * this->shape.getScale().y / 32))
 		{
-			this->shape.move(0.f, -this->shape.getLocalBounds().height * this->shape.getScale().y / 32);
+			if (this->movement_y > 0)
+				this->movement_y = -this->movement_y;
+			this->shape.move(0.f, this->movement_y);
 			this->moving = true;
 			this->updateAnimations();
+			to_return = sf::Vector2f(0.f, -this->shape.getLocalBounds().height * this->shape.getScale().y / this->move_divider);
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		if (!this->check_collision(map, this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.0f))
 		{
+			if (this->movement_x < 0)
+				this->movement_x = -this->movement_x;
 			texture.loadFromFile("images/walk_rightm.png");
-			this->shape.move(this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.f);
+			this->shape.move(this->movement_x, 0.f);
 			this->moving = true;
 			this->updateAnimations();
+			to_return = sf::Vector2f(this->shape.getLocalBounds().width * this->shape.getScale().x / this->move_divider, 0.f);
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		if (!this->check_collision(map, 0.0f, this->shape.getLocalBounds().height * this->shape.getScale().y / 32))
 		{
-			this->shape.move(0.f, this->shape.getLocalBounds().height * this->shape.getScale().y / 32);
+			if (this->movement_y < 0)
+				this->movement_y = -this->movement_y;
+			this->shape.move(0.f, this->movement_y);
 			this->moving = true;
 			this->updateAnimations();
+			to_return = sf::Vector2f(0.f, this->shape.getLocalBounds().height * this->shape.getScale().y / this->move_divider);
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		if (!this->check_collision(map, -this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.0f))
 		{
+			if (this->movement_x > 0)
+				this->movement_x = -this->movement_x;
 			texture.loadFromFile("images/walk_leftm.png");
-			this->shape.move(-this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.f);
+			this->shape.move(this->movement_x, 0.f);
 			this->moving = true;
 			this->updateAnimations();
+			to_return = sf::Vector2f(-this->shape.getLocalBounds().width * this->shape.getScale().x / this->move_divider, 0.f);
 		}
 	}
-	for (const std::unique_ptr<Chicken>& animal_ptr : map.get_animals())
-	{
-		if (!animal_ptr->get_Sprite().getGlobalBounds().intersects(this->shape.getGlobalBounds()))
-		{
-			animal_ptr->stop_now(false);
-		}
-		else
-		{
-			cont = true;
-		}
-	}
-	if (!cont)
-	{
-		map.set_play_music(false);
-	}
+	/*
+	*/
 	this->updateAnimations();
+	return to_return;
 }
 
+sf::Sprite Player::get_sprite() const
+{
+	return this->shape;
+}
 
 void Player::render(sf::RenderTarget& target) {
 	target.draw(this->shape);

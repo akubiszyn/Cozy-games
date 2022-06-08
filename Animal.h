@@ -19,10 +19,10 @@ public:
 
 class NPC : public Creature {
 	sf::Texture talkTexture;
-	sf::RenderWindow& window;
+	sf::Vector2u window_size;
 public:
 	bool startGame;
-	NPC(std::string texture, float xPos, float yPos, sf::RenderWindow&);
+	NPC(std::string texture, float xPos, float yPos, sf::Vector2u);
 	virtual ~NPC() {};
 	virtual void talk(int index);
 	virtual void set_position(float, float);
@@ -40,11 +40,11 @@ private:
 	unsigned int distance;
 	sf::Clock animationTimer;
 	std::string music_path;
-	sf::RenderWindow& window;
+	sf::Vector2u window_size;
 	//sf::RenderWindow& window;
 
 public:
-	Chicken(std::string, int, int, int, int, sf::RenderWindow&);
+	Chicken(std::string, int, int, int, int, sf::Vector2u);
 	virtual void move();
 	virtual void change_animation();
 	virtual ~Chicken();
