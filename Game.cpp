@@ -53,6 +53,14 @@ void Game::update_game()
 						this->is_end = true;
 						this->window.close();
 					}
+					if (this->event.type == sf::Event::KeyPressed)
+					{
+						if (this->event.key.code == sf::Keyboard::Escape)
+						{
+							this->is_end = true;
+							this->window.close();
+						}
+					}
 				}
 				this->window.clear();
 				this->map.update_game_map(this->window);
