@@ -7,10 +7,11 @@ Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), eve
 
 void Game::update_game()
 {
-	this->window.create(sf::VideoMode::getFullscreenModes()[0], "PROI GAME", sf::Style::Fullscreen);
+	window.create(sf::VideoMode::getFullscreenModes()[0], "PROI GAME", sf::Style::Fullscreen);
 	this->window.setFramerateLimit(30);
 	this->minigames.push_back(std::make_unique<Clicking_minigame>(Clicking_minigame()));
 	this->minigames.push_back(std::make_unique<JumpingMinigame>(JumpingMinigame()));
+	this->minigames.push_back(std::make_unique<DestroyBlockMinigame>(DestroyBlockMinigame()));
 	while (this->window.isOpen())
 	{
 		for (auto& npc_ptr : this->map.get_npcs()) {
@@ -19,10 +20,7 @@ void Game::update_game()
 				npc_ptr->startGame = false;
 				auto it = find(map.get_npcs().begin(), map.get_npcs().end(), npc_ptr);
 				int index = it - map.get_npcs().begin();
-				this->music.stop();
 				this->minigames[index]->start(this->window);
-				this->music.setLoop(true);
-				this->music.play();
 
 			}
 			else
@@ -55,14 +53,6 @@ void Game::update_game()
 					{
 						this->is_end = true;
 						this->window.close();
-					}
-					if (this->event.type == sf::Event::KeyPressed)
-					{
-						if (this->event.key.code == sf::Keyboard::Tab)
-						{
-							this->is_end = true;
-							this->window.close();
-						}
 					}
 				}
 				this->window.clear();

@@ -16,6 +16,10 @@ public:
 class Clicking_minigame : public Minigame
 {
 private:
+	//Variables
+	//Window
+//sf::RenderWindow& window;
+//sf::VideoMode videoMode;
 	sf::Event event;
 
 	//Mouse positions
@@ -52,8 +56,11 @@ private:
 	sf::Texture edn_screen_texture;
 
 	//Private functions
+//void iniVariables();
+//void initWindow();
 	void setFonts();
 	void setText();
+	//void setEnemies();
 
 public:
 	//Constructors / Destructors
@@ -62,18 +69,22 @@ public:
 	void restartGame();
 
 	//Accessors
+//const bool running() const;
 	bool get_end() const;
 
 	//Functions
 	void Spawn_food_object(sf::RenderWindow&);
 
+	//void pollEvents();
 	void updateMousePositions(sf::RenderWindow&);
 	void updateText();
 	void updateFood(sf::RenderWindow&);
+	//void update_game();
 	virtual void start(sf::RenderWindow&);
 	void displayText(sf::RenderTarget& target);
 	void displayFood(sf::RenderTarget& target);
 	void display_end_game(sf::RenderTarget& target);
+	//void display();
 	virtual unsigned int get_score() const;
 	void scale(sf::RenderWindow&, sf::Sprite&, int, int);
 	void make_end_game(sf::RenderWindow&);
@@ -137,3 +148,52 @@ public:
 	void play(sf::RenderWindow& window);
 	virtual unsigned int get_score() const;
 };
+
+class DestroyBlockMinigame : public Minigame {
+	sf::Event event;
+	int width;
+	int height;
+
+	//Resources
+	sf::Font font;
+
+	//Text
+	sf::Text text;
+
+	//Game logic
+	bool startGame;
+	bool end;
+	unsigned int score;
+	float dx, dy;
+	float xBall, yBall;
+	int blockNumber;
+
+	//Game objects
+	sf::Texture paddleT, blockT, ballT, backgroundT, gameOverT;
+	sf::Sprite paddle, block[1000], ball, background, gameOver;
+
+	//private funs
+
+
+public:
+	void restartGame();
+	void setFonts();
+	void setText();
+	//Constructors / Destructors
+	DestroyBlockMinigame();
+	~DestroyBlockMinigame() {};
+	//Accessors
+	//int getWidth();
+	//int getHeight();
+	void updateText();
+	void start(sf::RenderWindow&);
+	void setUpBlocks();
+	void updateMovement();
+	void updateWallCollision();
+	void movePaddle();
+	void displayText(sf::RenderTarget& target);
+	// Game logic
+	void play(sf::RenderWindow& window);
+	virtual unsigned int get_score() const;
+};
+
