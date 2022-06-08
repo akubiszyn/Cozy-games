@@ -16,10 +16,6 @@ public:
 class Clicking_minigame : public Minigame
 {
 private:
-	//Variables
-	//Window
-//sf::RenderWindow& window;
-//sf::VideoMode videoMode;
 	sf::Event event;
 
 	//Mouse positions
@@ -56,11 +52,8 @@ private:
 	sf::Texture edn_screen_texture;
 
 	//Private functions
-//void iniVariables();
-//void initWindow();
 	void setFonts();
 	void setText();
-	//void setEnemies();
 
 public:
 	//Constructors / Destructors
@@ -69,22 +62,18 @@ public:
 	void restartGame();
 
 	//Accessors
-//const bool running() const;
 	bool get_end() const;
 
 	//Functions
 	void Spawn_food_object(sf::RenderWindow&);
 
-	//void pollEvents();
 	void updateMousePositions(sf::RenderWindow&);
 	void updateText();
 	void updateFood(sf::RenderWindow&);
-	//void update_game();
 	virtual void start(sf::RenderWindow&);
 	void displayText(sf::RenderTarget& target);
 	void displayFood(sf::RenderTarget& target);
 	void display_end_game(sf::RenderTarget& target);
-	//void display();
 	virtual unsigned int get_score() const;
 	void scale(sf::RenderWindow&, sf::Sprite&, int, int);
 	void make_end_game(sf::RenderWindow&);
