@@ -139,6 +139,10 @@ Chicken::Chicken(std::string texture, int move_up_down, int move_left_right, int
 	this->set_position(x, y);
 	this->sprite.setPosition(this->position);
 	this->music_path = "music/chicken.ogg";
+	if(this->moving_up_down != 0)
+		this->moving_up_down = this->sprite.getLocalBounds().height * this->sprite.getScale().y / this->moving_up_down;
+	if(this->moving_left_right != 0)
+		this->moving_left_right = this->sprite.getLocalBounds().width * this->sprite.getScale().x / this->moving_left_right;
 }
 
 

@@ -84,35 +84,35 @@ void Player::updateMovement(Game_map& map) {
 	bool cont = false;
 	this->moving = false;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		if (!this->check_collision(map, 0.0f, -2.0f))
+		if (!this->check_collision(map, 0.0f, -this->shape.getLocalBounds().height * this->shape.getScale().y / 32))
 		{
-			this->shape.move(0.f, -2.0f);
+			this->shape.move(0.f, -this->shape.getLocalBounds().height * this->shape.getScale().y / 32);
 			this->moving = true;
 			this->updateAnimations();
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		if (!this->check_collision(map, 2.0f, 0.0f))
+		if (!this->check_collision(map, this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.0f))
 		{
 			texture.loadFromFile("images/walk_rightm.png");
-			this->shape.move(2.0f, 0.f);
+			this->shape.move(this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.f);
 			this->moving = true;
 			this->updateAnimations();
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		if (!this->check_collision(map, 0.0f, 2.0f))
+		if (!this->check_collision(map, 0.0f, this->shape.getLocalBounds().height * this->shape.getScale().y / 32))
 		{
-			this->shape.move(0.f, 2.0f);
+			this->shape.move(0.f, this->shape.getLocalBounds().height * this->shape.getScale().y / 32);
 			this->moving = true;
 			this->updateAnimations();
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		if (!this->check_collision(map, -2.0f, 0.0f))
+		if (!this->check_collision(map, -this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.0f))
 		{
 			texture.loadFromFile("images/walk_leftm.png");
-			this->shape.move(-2.0f, 0.f);
+			this->shape.move(-this->shape.getLocalBounds().width * this->shape.getScale().x / 32, 0.f);
 			this->moving = true;
 			this->updateAnimations();
 		}
