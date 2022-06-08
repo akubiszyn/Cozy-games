@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "C:\Users\Mateusz Kiełbus\Desktop\Studia\PROI\C++\SFML\PROI_game\Game.h"
+#include "Game.h"
 
 TEST_CASE("constructor_Game_square1", "[constructors]")
 {
@@ -16,7 +16,7 @@ TEST_CASE("constructor_Game_square1", "[constructors]")
 
 TEST_CASE("constructor_Game_square2", "[constructors]")
 {
-	Game_square square("images/grass.png", 10, 10, true);
+	Game_square square("images/trawa.png", 10, 10, true);
 	REQUIRE(square.get_Sprite().getTextureRect() == sf::IntRect(0, 0, 120, 62));
 	const sf::Texture& temp = *square.get_Sprite_ref().getTexture();
 	sf::Texture& non_const = const_cast<sf::Texture&>(temp);
@@ -35,7 +35,7 @@ TEST_CASE("constructor_Game_square3_invalid_texture", "[constructors]")
 	}
 	catch (const TextureNotLoadedException& e)
 	{
-		REQUIRE(std::string(e.what()) == "Game_square texture was not loaded.");
+		REQUIRE(std::string(e.what()) == "Texture was not loaded.");
 		check = true;
 	}
 	REQUIRE(check);
@@ -96,7 +96,6 @@ TEST_CASE("constructor_Game_map", "[constructors]")
 	REQUIRE(map.get_gridheight() == 16);
 	REQUIRE(map.get_gridlength() == 16);
 	REQUIRE(map.get_play_music() == false);
-	REQUIRE(map.get_minigame_choice() == 0);
 	REQUIRE(map.get_music_path() == "");
 	REQUIRE(map.get_animals().size() == 3);
 	REQUIRE(map.get_squares_first().empty() == false);
@@ -131,7 +130,7 @@ TEST_CASE("constructor_Chicken_invalid_texture", "[constructors]")
 	}
 	catch (const TextureNotLoadedException& e)
 	{
-		REQUIRE(e.what() == "Game_square texture was not loaded.");
+		REQUIRE(e.what() == "Texture was not loaded.");
 		check = true;
 	}
 	REQUIRE(check);
@@ -216,4 +215,58 @@ TEST_CASE("Chicken_move_3", "[Chicken_methods]")
 	const sf::Vector2f& temp1 = chicken.get_Sprite().getPosition();
 	non_const = const_cast<sf::Vector2f&>(temp1);
 	REQUIRE(non_const == sf::Vector2f(2, 4));
+}
+
+
+TEST_CASE("constructor_NPC", "[constructors]")
+{	
+	sf::RenderWindow window;
+	NPC npc("images/walk_left.png", 100.0, 100.0, window);
+	REQUIRE(npc.get_Sprite().getTextureRect() == sf::IntRect(0, 0, 72, 50));
+	REQUIRE(npc.get_Sprite().getPosition().x == 100.0);
+	REQUIRE(npc.get_Sprite().getPosition().y == 100.0);
+	REQUIRE(npc.getStartGame() == false);
+
+}
+
+TEST_CASE("constructor_NPC_invalid_texture", "[constructors]")
+{
+	bool check = false;
+	sf::RenderWindow window;
+	try
+	{
+		NPC("images/walk_le.png", 100.0, 100.0, window);
+	}
+	catch (const TextureNotLoadedException & e)
+	{
+		REQUIRE(e.what() == "Texture was not loaded.");
+		check = true;
+	}
+	REQUIRE(check);
+}
+
+TEST_CASE("constructor_NPC_invalid_position", "[constructors]")
+{
+	sf::RenderWindow window;
+	bool check = false;
+	try
+	{
+		NPC npc("images/walk_left.png", -100.0, -100.0, window);
+	}
+	catch (const InvalidPositionException & e)
+	{
+		REQUIRE(e.what() == "x < 0 or y < 0.");
+		check = true;
+	}
+	REQUIRE(check);
+}
+
+TEST_CASE("constructor_JumpingMinigame", "[constructors]")
+{
+	JumpingMinigame game();
+	REQUIRE(game.getWidth() == 400);
+	REQUIRE(game.getHeight() == 533);
+	REQUIRE(game.getXPos() == 100);
+	REQUIRE(game.getYPos() == 100);
+
 }

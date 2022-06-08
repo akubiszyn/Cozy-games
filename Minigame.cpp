@@ -67,18 +67,12 @@ void Game::initEnemies()
 //Constructors / Destructors
 Clicking_minigame::Clicking_minigame()
 {
-	this->end = false;
-	this->score = 0;
-	this->to_lose = 20;
-	this->food_timer_max = 20.f;
-	this->food_timer = this->food_timer_max;
+	this->restartGame();
 	this->Max_number_of_food_objects = 5;
 	this->mouse_is_pressed = false;
 	this->textures_info = { {0, "images/banana.png"}, {1, "images/tomato.png"}, {2, "images/apple.png"}, {3, "images/orange.png"}, {4, "images/watermelon.png"}, {5, "images/rotten_banana.png"}, {6, "images/rotten_tomato.png"}, {7, "images/rotten_apple.png"} };
 	this->background_texture.loadFromFile("images/background.png");
 	this->background.setTextureRect(sf::IntRect(0, 0, 800, 600));
-	this->movement_speed = 1.f;
-	this->movement_left_right = 0.f;
 	for (int i = 0; i < 8; i++)
 	{
 		this->textures[i].loadFromFile(this->textures_info[i]);
@@ -90,6 +84,16 @@ Clicking_minigame::Clicking_minigame()
 Clicking_minigame::~Clicking_minigame()
 {
 	//delete this->window;
+}
+
+void Clicking_minigame::restartGame() {
+	this->end = false;
+	this->score = 0;
+	this->to_lose = 20;
+	this->food_timer_max = 20.f;
+	this->food_timer = this->food_timer_max;
+	this->movement_speed = 1.f;
+	this->movement_left_right = 0.f;
 }
 
 //Accessors
@@ -349,6 +353,7 @@ void Clicking_minigame::start(sf::RenderWindow& window)
 {
 	window.create(sf::VideoMode::getFullscreenModes()[0], "Clicking minigame", sf::Style::Fullscreen | sf::Style::Titlebar | sf::Style::Close);
 	window.setFramerateLimit(30);
+	restartGame();
 	std::srand(static_cast<unsigned int>(time(NULL)));
 	this->scale(window, this->background, 1, 1);
 	sf::Music music;
@@ -512,6 +517,21 @@ JumpingMinigame::JumpingMinigame()
 	this->setText();
 }
 
+int JumpingMinigame::getWidth() {
+	return this->width;
+}
+
+int JumpingMinigame::getHeight() {
+	return this->height;
+}
+
+int JumpingMinigame::getXPos() {
+	return this->xPos;
+}
+int JumpingMinigame::getYPos() {
+	return this->yPos;
+}
+
 JumpingMinigame::~JumpingMinigame()
 {
 	//delete this->window;
@@ -553,10 +573,12 @@ void JumpingMinigame::adjustChicken(float scale, int width, int height) {
 }
 
 void JumpingMinigame::moveChicken() {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		this->startGame = true;
 		this->xPos += 3;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		this->startGame = true;
 		this->xPos -= 3;
 	}
 }
@@ -618,6 +640,7 @@ void JumpingMinigame::play(sf::RenderWindow& window) {
 }
 
 void JumpingMinigame::restartGame() {
+	this->startGame = false;
 	this->xPos = 100;
 	this->yPos = 100;
 	this->dXPos = 0;
@@ -644,8 +667,10 @@ void JumpingMinigame::start(sf::RenderWindow& window)
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		this->dYPos += fallingSpeed;
-		this->yPos += this->dYPos;
+		if (startGame) {
+			this->dYPos += fallingSpeed;
+			this->yPos += this->dYPos;
+		}
 
 		if (this->yPos > this->height - 30) {
 			end = true;

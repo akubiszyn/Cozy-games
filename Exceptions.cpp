@@ -7,7 +7,7 @@ TextureNotLoadedException::TextureNotLoadedException() : std::exception()
 */
 const char* TextureNotLoadedException::what() const throw()
 {
-	return "Game_square texture was not loaded.";
+	return "Texture was not loaded.";
 }
 
 const char* InvalidPositionException::what() const throw()

@@ -27,6 +27,7 @@ public:
 	virtual void talk(int index);
 	virtual void set_position(float, float);
 	virtual void set_Sprite(std::string);
+	virtual bool getStartGame();
 
 };
 

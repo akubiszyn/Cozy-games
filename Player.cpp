@@ -80,7 +80,6 @@ bool Player::check_collision(Game_map& map, float movement_x, float movement_y)
 	return false;
 }
 
-
 void Player::updateMovement(Game_map& map) {
 	bool cont = false;
 	this->moving = false;

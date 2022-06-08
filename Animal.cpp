@@ -99,9 +99,13 @@ NPC::NPC(std::string texture, float xPos, float yPos, sf::RenderWindow& window) 
 	this->startGame = false;
 }
 
+bool NPC::getStartGame() {
+	return this->startGame;
+}
+
 void NPC::talk(int index) {
 	sf::Event event;
-	sf::RenderWindow talkWindow(sf::VideoMode(400, 300), "Let's play!");
+	sf::RenderWindow talkWindow(sf::VideoMode::getDesktopMode(), "Let's play!");
 	sf::Sprite talkBackground;
 	sf::Texture talkTexture;
 	talkTexture.loadFromFile("images/talk" + std::to_string(index) + ".png");
