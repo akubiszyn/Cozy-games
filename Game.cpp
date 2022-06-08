@@ -19,7 +19,10 @@ void Game::update_game()
 				npc_ptr->startGame = false;
 				auto it = find(map.get_npcs().begin(), map.get_npcs().end(), npc_ptr);
 				int index = it - map.get_npcs().begin();
+				this->music.stop();
 				this->minigames[index]->start(this->window);
+				this->music.setLoop(true);
+				this->music.play();
 
 			}
 			else
