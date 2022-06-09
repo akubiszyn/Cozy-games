@@ -55,18 +55,18 @@ void Game_map::set_up_initial_state()
 	this->player_position = sf::Vector2f(14, 8);
 	this->set_up_npc_positions();
 	this->set_up_squares();
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 0, -16, 7, 13, this->window_size))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", -16, 0, 9, 14, this->window_size))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", 16, 0, 8, 13, this->window_size))));
-	this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
-	this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
-	this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[0].x, get_npc_positions()[0].y, this->window_size)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[1].x, get_npc_positions()[1].y, this->window_size)));
-	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", get_npc_positions()[2].x, get_npc_positions()[2].y, this->window_size)));
-	this->get_npcs()[0]->get_Sprite().setTexture(this->get_npcs()[0]->get_Texture());
-	this->get_npcs()[1]->get_Sprite().setTexture(this->get_npcs()[1]->get_Texture());
-	this->get_npcs()[2]->get_Sprite().setTexture(this->get_npcs()[2]->get_Texture());
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 14), 29, 48, 2, 2))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(9, 14), 29, 48, 2, 2))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 2, 2))));
+	//this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
+	//this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
+	//this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", this->window_size.x / 16, this->window_size.y / 16, 0.6, 0.6, sf::Vector2i(get_npc_positions()[0].x, get_npc_positions()[0].y), 72, 50)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", this->window_size.x / 16, this->window_size.y / 16, 0.6, 0.6, sf::Vector2i(get_npc_positions()[1].x, get_npc_positions()[1].y), 72, 50)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/walk_leftm.png", this->window_size.x / 16, this->window_size.y / 16, 0.6, 0.6, sf::Vector2i(get_npc_positions()[2].x, get_npc_positions()[2].y), 72, 50)));
+	//this->get_npcs()[0]->get_Sprite().setTexture(this->get_npcs()[0]->get_Texture());
+	//this->get_npcs()[1]->get_Sprite().setTexture(this->get_npcs()[1]->get_Texture());
+	//this->get_npcs()[2]->get_Sprite().setTexture(this->get_npcs()[2]->get_Texture());
 
 }
 
