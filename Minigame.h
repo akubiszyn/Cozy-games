@@ -10,7 +10,7 @@ public:
 	virtual void start(sf::RenderWindow&) = 0;
 	virtual unsigned int get_score() const = 0;
 	//virtual bool get_is_end() = 0;
-	virtual ~Minigame() {};
+	virtual ~Minigame() = 0;
 };
 
 class Clicking_minigame : public Minigame

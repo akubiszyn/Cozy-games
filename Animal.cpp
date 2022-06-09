@@ -1,5 +1,7 @@
 #include "Animal.h"
 
+Ianimal::~Ianimal() {}
+
 void Creature::set_Texture(std::string texture)
 {
 	if (!this->texture.loadFromFile(texture))

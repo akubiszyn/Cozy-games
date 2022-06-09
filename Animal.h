@@ -43,9 +43,8 @@ class Ianimal
 {
 public:
 	virtual void move() = 0;
-	virtual void change_animation() = 0;
 	virtual void stop_now(bool) = 0;
-	virtual ~Ianimal() {};
+	virtual ~Ianimal() = 0;
 };
 
 class NPC : public Creature {
@@ -77,6 +76,10 @@ private:
 	unsigned int distance_max;
 	//sf::Clock animationTimer;
 	std::string music_path;
+	sf::IntRect currentFrame;
+	sf::Texture wholeFrame;
+	sf::Sprite wholeSprite;
+	sf::Clock animationTimer;
 	
 	//sf::Vector2u window_size;
 	//sf::IntRect currentFrame;

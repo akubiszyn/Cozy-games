@@ -9,6 +9,10 @@ private:
 	sf::Sprite square_sprite;
 	float scale_x;
 	float scale_y;
+	sf::IntRect currentFrame;
+	sf::Texture wholeFrame;
+	sf::Sprite wholeSprite;
+	sf::Clock animationTimer;
 
 public:
 	Game_square();
