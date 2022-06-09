@@ -327,11 +327,14 @@ bool NPC::getStartGame() {
 
 void NPC::talk(int index) {
 	sf::Event event;
-	sf::RenderWindow talkWindow(sf::VideoMode::getDesktopMode(), "Let's play!");
+	sf::RenderWindow talkWindow(sf::VideoMode::getFullscreenModes()[0], "Let's play!", sf::Style::Fullscreen);
 	sf::Sprite talkBackground;
 	sf::Texture talkTexture;
 	talkTexture.loadFromFile("images/talk" + std::to_string(index) + ".png");
 	talkBackground.setTexture(talkTexture);
+	float scale_x_temp = float(talkWindow.getSize().x) / float(talkBackground.getLocalBounds().width);
+	float scale_y_temp = float(talkWindow.getSize().y) / float(talkBackground.getLocalBounds().height);
+	talkBackground.setScale(scale_x_temp, scale_y_temp);
 	while (talkWindow.isOpen()) {
 		while (talkWindow.pollEvent(event))
 		{
@@ -362,70 +365,84 @@ Chicken::Chicken(std::string texture, unsigned int width, unsigned int height, f
 	//this->sprite.setPosition(this->position);
 	//this->moving_left_right = move_left_right;
 	//this->moving_up_down = move_up_down;
+	this->stop = false;
 	this->currentFrame = sf::IntRect(0, 0, rect_x, rect_y);
 	this->distance = 0;
 	this->music_path = "music/chicken.ogg";
-	if(this->moving_up_down != 0)
-		this->moving_up_down = this->sprite.getLocalBounds().height * this->sprite.getScale().y / move_left_right;
-	if(this->moving_left_right != 0)
-		this->moving_left_right = this->sprite.getLocalBounds().width * this->sprite.getScale().x / move_up_down;
+	if (move_left_right != 0)
+		this->moving_left_right = this->sprite.getLocalBounds().height * this->sprite.getScale().y / move_left_right;
+	else
+		this->moving_left_right = 0;
+	if (move_up_down != 0)
+		this->moving_up_down = this->sprite.getLocalBounds().width * this->sprite.getScale().x / move_up_down;
+	else
+		this->moving_up_down = 0;
 	this->distance_max = distance_max;
 }
 
 Chicken::Chicken() : Creature()
 {
+	this->stop = false;
 	this->moving_left_right = 2;
 	this->moving_up_down = 2;
 	this->currentFrame = sf::IntRect(0, 0, sf::VideoMode::getFullscreenModes()[0].width / 16, sf::VideoMode::getFullscreenModes()[0].height / 16);
 	this->distance = 0;
+	this->distance_max = 16;
 	this->music_path = "music/chicken.ogg";
-	if (this->moving_up_down != 0)
-		this->moving_up_down = this->sprite.getLocalBounds().height * this->sprite.getScale().y / 16;
-	if (this->moving_left_right != 0)
-		this->moving_left_right = this->sprite.getLocalBounds().width * this->sprite.getScale().x / 16;
+	this->moving_up_down = this->sprite.getLocalBounds().height * this->sprite.getScale().y / 16;
+	this->moving_left_right = this->sprite.getLocalBounds().width * this->sprite.getScale().x / 16;
 }
 
 Chicken::Chicken(const Chicken& chicken) : Creature(chicken)
 {
+	this->stop = chicken.stop;
 	this->moving_left_right = chicken.moving_left_right;
 	this->moving_up_down = chicken.moving_up_down;
 	this->currentFrame = chicken.currentFrame;
 	this->distance = chicken.distance;
 	this->music_path = chicken.music_path;
 	this->animationTimer = chicken.animationTimer;
+	this->distance_max = chicken.distance_max;
 }
 
 Chicken::Chicken(Chicken&& chicken) noexcept(true) : Creature(std::move(chicken))
 {
+	this->stop = bool();
 	this->moving_left_right = int();
 	this->moving_up_down = int();
 	this->currentFrame = sf::IntRect();
 	this->distance = unsigned int();
 	this->music_path = std::string();
 	this->animationTimer = sf::Clock();
+	this->stop = chicken.stop;
 	this->moving_left_right = chicken.moving_left_right;
 	this->moving_up_down = chicken.moving_up_down;
 	this->currentFrame = chicken.currentFrame;
 	this->distance = chicken.distance;
 	this->music_path = chicken.music_path;
 	this->animationTimer = chicken.animationTimer;
+	this->distance_max = chicken.distance_max;
+	chicken.stop = bool();
 	chicken.moving_left_right = int();
 	chicken.moving_up_down = int();
 	chicken.currentFrame = sf::IntRect();
 	chicken.distance = unsigned int();
 	chicken.music_path = std::string();
 	chicken.animationTimer = sf::Clock();
+	chicken.distance_max = unsigned int();
 }
 
 Chicken& Chicken::operator=(const Chicken& chicken)
 {
 	Creature::operator=(chicken);
+	this->stop = chicken.stop;
 	this->moving_left_right = chicken.moving_left_right;
 	this->moving_up_down = chicken.moving_up_down;
 	this->currentFrame = chicken.currentFrame;
 	this->distance = chicken.distance;
 	this->music_path = chicken.music_path;
 	this->animationTimer = chicken.animationTimer;
+	this->distance_max = chicken.distance_max;
 	return *this;
 }
 
@@ -434,24 +451,29 @@ Chicken& Chicken::operator=(Chicken&& chicken) noexcept(true)
 	Creature::operator=(std::move(chicken));
 	if (this != &chicken)
 	{
+		this->stop = bool();
 		this->moving_left_right = int();
 		this->moving_up_down = int();
 		this->currentFrame = sf::IntRect();
 		this->distance = unsigned int();
 		this->music_path = std::string();
 		this->animationTimer = sf::Clock();
+		this->stop = chicken.stop;
 		this->moving_left_right = chicken.moving_left_right;
 		this->moving_up_down = chicken.moving_up_down;
 		this->currentFrame = chicken.currentFrame;
 		this->distance = chicken.distance;
 		this->music_path = chicken.music_path;
 		this->animationTimer = chicken.animationTimer;
+		this->distance_max = chicken.distance_max;
+		chicken.stop = bool();
 		chicken.moving_left_right = int();
 		chicken.moving_up_down = int();
 		chicken.currentFrame = sf::IntRect();
 		chicken.distance = unsigned int();
 		chicken.music_path = std::string();
 		chicken.animationTimer = sf::Clock();
+		chicken.distance_max = unsigned int();
 	}
 	return *this;
 }
@@ -461,7 +483,7 @@ void Chicken::move()
 {
 	if (!stop)
 	{
-		if (this->distance > 20)
+		if (this->distance >= this->distance_max)
 		{
 			this->moving_left_right = -this->moving_left_right;
 			this->moving_up_down = -this->moving_up_down;

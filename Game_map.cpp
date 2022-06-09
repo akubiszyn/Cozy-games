@@ -55,9 +55,9 @@ void Game_map::set_up_initial_state()
 	this->player_position = sf::Vector2f(14, 8);
 	this->set_up_npc_positions();
 	this->set_up_squares();
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 14), 29, 48, 2, 2))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(9, 14), 29, 48, 2, 2))));
-	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 2, 2))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(10, 13), 29, 48, 16, 0, 20))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(9, 14), 29, 48, -16, 0, 20))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 0, -8, 15))));
 	//this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	//this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	//this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
