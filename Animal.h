@@ -1,5 +1,5 @@
 #pragma once
-#include "Ianimations.h"
+#include "Game_square.h"
 class Creature
 {
 protected:
@@ -45,6 +45,7 @@ public:
 	virtual void move() = 0;
 	virtual void change_animation() = 0;
 	virtual void stop_now(bool) = 0;
+	virtual ~Ianimal() {};
 };
 
 class NPC : public Creature {

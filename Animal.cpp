@@ -365,6 +365,8 @@ Chicken::Chicken(std::string texture, unsigned int width, unsigned int height, f
 	//this->sprite.setPosition(this->position);
 	//this->moving_left_right = move_left_right;
 	//this->moving_up_down = move_up_down;
+	this->wholeFrame.loadFromFile(texture);
+	this->wholeSprite.setTexture(this->wholeFrame);
 	this->stop = false;
 	this->currentFrame = sf::IntRect(0, 0, rect_x, rect_y);
 	this->distance = 0;
@@ -382,6 +384,8 @@ Chicken::Chicken(std::string texture, unsigned int width, unsigned int height, f
 
 Chicken::Chicken() : Creature()
 {
+	this->wholeFrame.loadFromFile("images/chicken_walk_left.png");
+	this->wholeSprite.setTexture(this->wholeFrame);
 	this->stop = false;
 	this->moving_left_right = 2;
 	this->moving_up_down = 2;
@@ -395,6 +399,9 @@ Chicken::Chicken() : Creature()
 
 Chicken::Chicken(const Chicken& chicken) : Creature(chicken)
 {
+	this->wholeFrame = chicken.wholeFrame;
+	this->wholeSprite = chicken.wholeSprite;
+	this->wholeSprite.setTexture(this->wholeFrame);
 	this->stop = chicken.stop;
 	this->moving_left_right = chicken.moving_left_right;
 	this->moving_up_down = chicken.moving_up_down;
@@ -407,6 +414,8 @@ Chicken::Chicken(const Chicken& chicken) : Creature(chicken)
 
 Chicken::Chicken(Chicken&& chicken) noexcept(true) : Creature(std::move(chicken))
 {
+	this->wholeFrame = sf::Texture();
+	this->wholeSprite = sf::Sprite();
 	this->stop = bool();
 	this->moving_left_right = int();
 	this->moving_up_down = int();
@@ -414,6 +423,10 @@ Chicken::Chicken(Chicken&& chicken) noexcept(true) : Creature(std::move(chicken)
 	this->distance = unsigned int();
 	this->music_path = std::string();
 	this->animationTimer = sf::Clock();
+	this->distance_max = unsigned int();
+	this->wholeFrame = chicken.wholeFrame;
+	this->wholeSprite = chicken.wholeSprite;
+	this->wholeSprite.setTexture(this->wholeFrame);
 	this->stop = chicken.stop;
 	this->moving_left_right = chicken.moving_left_right;
 	this->moving_up_down = chicken.moving_up_down;
@@ -422,6 +435,8 @@ Chicken::Chicken(Chicken&& chicken) noexcept(true) : Creature(std::move(chicken)
 	this->music_path = chicken.music_path;
 	this->animationTimer = chicken.animationTimer;
 	this->distance_max = chicken.distance_max;
+	chicken.wholeFrame = sf::Texture();
+	chicken.wholeSprite = sf::Sprite();
 	chicken.stop = bool();
 	chicken.moving_left_right = int();
 	chicken.moving_up_down = int();
@@ -435,6 +450,9 @@ Chicken::Chicken(Chicken&& chicken) noexcept(true) : Creature(std::move(chicken)
 Chicken& Chicken::operator=(const Chicken& chicken)
 {
 	Creature::operator=(chicken);
+	this->wholeFrame = chicken.wholeFrame;
+	this->wholeSprite = chicken.wholeSprite;
+	this->wholeSprite.setTexture(this->wholeFrame);
 	this->stop = chicken.stop;
 	this->moving_left_right = chicken.moving_left_right;
 	this->moving_up_down = chicken.moving_up_down;
@@ -451,6 +469,8 @@ Chicken& Chicken::operator=(Chicken&& chicken) noexcept(true)
 	Creature::operator=(std::move(chicken));
 	if (this != &chicken)
 	{
+		this->wholeFrame = sf::Texture();
+		this->wholeSprite = sf::Sprite();
 		this->stop = bool();
 		this->moving_left_right = int();
 		this->moving_up_down = int();
@@ -458,6 +478,10 @@ Chicken& Chicken::operator=(Chicken&& chicken) noexcept(true)
 		this->distance = unsigned int();
 		this->music_path = std::string();
 		this->animationTimer = sf::Clock();
+		this->distance_max = unsigned int();
+		this->wholeFrame = chicken.wholeFrame;
+		this->wholeSprite = chicken.wholeSprite;
+		this->wholeSprite.setTexture(this->wholeFrame);
 		this->stop = chicken.stop;
 		this->moving_left_right = chicken.moving_left_right;
 		this->moving_up_down = chicken.moving_up_down;
@@ -466,6 +490,8 @@ Chicken& Chicken::operator=(Chicken&& chicken) noexcept(true)
 		this->music_path = chicken.music_path;
 		this->animationTimer = chicken.animationTimer;
 		this->distance_max = chicken.distance_max;
+		chicken.wholeFrame = sf::Texture();
+		chicken.wholeSprite = sf::Sprite();
 		chicken.stop = bool();
 		chicken.moving_left_right = int();
 		chicken.moving_up_down = int();
@@ -516,7 +542,7 @@ sf::Vector2f Chicken::get_position() const
 void Chicken::change_animation()
 {
 	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.1f) {
-		if (this->currentFrame.left >= this->currentFrame.width * 3) {
+		if (this->currentFrame.left >= this->wholeSprite.getLocalBounds().width - this->sprite.getLocalBounds().width){
 			this->currentFrame.left = 0;
 		}
 		this->currentFrame.left += this->currentFrame.width;
