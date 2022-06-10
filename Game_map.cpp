@@ -97,7 +97,7 @@ bool Game_map::check_collision(const Player& player)
 			}
 		}
 	}
-	for (const std::unique_ptr<Chicken>& animal_ptr : this->get_animals())
+	for (const std::unique_ptr<Ianimal>& animal_ptr : this->get_animals())
 	{
 		if (animal_ptr->get_Sprite().getGlobalBounds().intersects(check))
 		{
@@ -118,7 +118,7 @@ bool Game_map::check_collision(const Player& player)
 		}
 	}
 
-	for (const std::unique_ptr<Chicken>& animal_ptr : this->get_animals())
+	for (const std::unique_ptr<Ianimal>& animal_ptr : this->get_animals())
 	{
 		if (!animal_ptr->get_Sprite().getGlobalBounds().intersects(player.get_sprite().getGlobalBounds()))
 		{
@@ -244,7 +244,7 @@ void Game_map::set_up_squares()
 			}
 		}
 	}
-
+	/*
 	for (std::pair<const unsigned int, std::map<unsigned int, Game_square>>& row : this->get_squares_first())
 	{
 		for (std::pair<const unsigned int, Game_square>& column : row.second)
@@ -265,7 +265,7 @@ void Game_map::set_up_squares()
 			column.second.get_Sprite_ref().setTexture(column.second.get_Texture_ref());
 		}
 	}
-
+	*/
 }
 
 void Game_map::update_game_map(sf::RenderTarget& window)
@@ -288,7 +288,7 @@ void Game_map::update_game_map(sf::RenderTarget& window)
 	{
 		npc->display(window);
 	}
-	for (const std::unique_ptr<Chicken>& animal_ptr : this->get_animals())
+	for (const std::unique_ptr<Ianimal>& animal_ptr : this->get_animals())
 	{
 		animal_ptr->display(window);
 		animal_ptr->move();
@@ -296,7 +296,7 @@ void Game_map::update_game_map(sf::RenderTarget& window)
 
 }
 
-std::vector<std::unique_ptr<Chicken>>& Game_map::get_animals()
+std::vector<std::unique_ptr<Ianimal>>& Game_map::get_animals()
 {
 	return this->animals;
 }

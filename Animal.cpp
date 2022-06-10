@@ -541,6 +541,17 @@ sf::Vector2f Chicken::get_position() const
 	return this->position;
 }
 */
+
+void Chicken::display(sf::RenderTarget& window) const
+{
+	Creature::display(window);
+}
+
+sf::Sprite Chicken::get_Sprite() const
+{
+	return Creature::get_Sprite();
+}
+
 void Chicken::change_animation()
 {
 	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.1f) {
@@ -552,8 +563,6 @@ void Chicken::change_animation()
 		this->animationTimer.restart();
 	}
 }
-
-
 
 void Chicken::stop_now(bool stop)
 {

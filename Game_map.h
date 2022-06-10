@@ -10,7 +10,7 @@ class Game_map
 private:
 	std::map<unsigned int, std::map<unsigned int, Game_square>> squares_first;
 	std::map<unsigned int, std::map<unsigned int, Game_square>> squares_second;
-	std::vector<std::unique_ptr<Chicken>> animals;
+	std::vector<std::unique_ptr<Ianimal>> animals;
 	std::vector<std::unique_ptr<NPC>> npcs;
 	unsigned int gridlength;
 	unsigned int gridheight;
@@ -34,7 +34,7 @@ public:
 	std::map<unsigned int, std::map<unsigned int, Game_square>>& get_squares_second();
 	void update_game_map(sf::RenderTarget&);
 	Game_map();
-	std::vector<std::unique_ptr<Chicken>>& get_animals();
+	std::vector<std::unique_ptr<Ianimal>>& get_animals();
 	std::vector<std::unique_ptr<NPC>>& get_npcs();
 	void set_music_path(std::string);
 	std::string get_music_path() const;

@@ -41,10 +41,15 @@ public:
 
 class Ianimal
 {
+protected:
+	std::string music_path;
 public:
 	virtual void move() = 0;
 	virtual void stop_now(bool) = 0;
 	virtual ~Ianimal() = 0;
+	virtual std::string get_music_path() const = 0;
+	virtual void display(sf::RenderTarget&) const = 0;
+	virtual sf::Sprite get_Sprite() const = 0;
 };
 
 class NPC : public Creature {
@@ -66,7 +71,7 @@ public:
 
 };
 
-class Chicken : public Creature, Ianimal, Ianimations
+class Chicken : public Creature, public Ianimal, public Ianimations
 {
 private:
 	bool stop;
@@ -75,12 +80,6 @@ private:
 	unsigned int distance;
 	unsigned int distance_max;
 	//sf::Clock animationTimer;
-	std::string music_path;
-	sf::IntRect currentFrame;
-	sf::Texture wholeFrame;
-	sf::Sprite wholeSprite;
-	sf::Clock animationTimer;
-	
 	//sf::Vector2u window_size;
 	//sf::IntRect currentFrame;
 	//sf::RenderWindow& window;
@@ -97,6 +96,8 @@ public:
 	virtual ~Chicken() {};
 	virtual void stop_now(bool);
 	virtual std::string get_music_path() const;
+	virtual void display(sf::RenderTarget&) const override;
+	virtual sf::Sprite get_Sprite() const override;
 	//sf::Vector2f get_position() const;
 	//virtual void set_position(float, float);
 	//virtual void set_Sprite(std::string);
