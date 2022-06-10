@@ -33,10 +33,12 @@ public:
 	Creature(Creature&&) noexcept(true);
 	Creature& operator=(const Creature&);
 	Creature& operator=(Creature&&) noexcept(true);
-	//float get_in_square_scale_x() const;
-	//float get_in_square_scale_y() const;
-	//float get_scale_x() const;
-	//float get_scale_y() const;
+	float get_in_square_scale_x() const;
+	float get_in_square_scale_y() const;
+	float get_scale_x() const;
+	float get_scale_y() const;
+	unsigned int get_rect_x() const;
+	unsigned int get_rect_y() const;
 };
 
 class Ianimal
@@ -98,7 +100,13 @@ public:
 	virtual std::string get_music_path() const;
 	virtual void display(sf::RenderTarget&) const override;
 	virtual sf::Sprite get_Sprite() const override;
-	//sf::Vector2f get_position() const;
-	//virtual void set_position(float, float);
-	//virtual void set_Sprite(std::string);
+	bool get_stop() const;
+	int get_moving_up_down() const;
+	int get_moving_left_right() const;
+	unsigned int get_distance() const;
+	unsigned int get_distance_max() const;
+	sf::IntRect get_currentFrame() const;
+	sf::Texture get_WholeFrame() const;
+	sf::Sprite get_WholeSprite() const;
+	sf::Clock get_animationTimer() const;
 };

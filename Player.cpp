@@ -1,6 +1,14 @@
 #include "Player.h"
 
 Player::Player(sf::Vector2u vec, sf::Vector2i pos, sf::Vector2i shape_size, unsigned int scale_divider, unsigned int move_divider, float shape_in_square_divider) : window_size(vec) {
+	if (vec.x == 0 || vec.y == 0 || pos.x == 0 || pos.y == 0 || shape_size.x == 0 || shape_size.y == 0 || scale_divider == 0 || move_divider == 0 || shape_in_square_divider == 0)
+	{
+		throw ZeroOccuredException();
+	}
+	if (pos.x < 0 || pos.y < 0)
+	{
+		throw InvalidPositionException();
+	}
 	this->shape_size = shape_size;
 	this->scale_divider = scale_divider;
 	this->move_divider = move_divider;
@@ -30,7 +38,10 @@ void Player::initSprite()
 
 void Player::initTexture()
 {
-	this->texture.loadFromFile("images/walk_leftm.png");
+	if (!this->texture.loadFromFile("images/walk_leftm.png"))
+	{
+		throw TextureNotLoadedException();
+	}
 }
 
 float Player::get_movement_x() const
@@ -93,8 +104,6 @@ sf::Vector2f Player::updateMovement() {
 			to_return = sf::Vector2f(-this->shape.getLocalBounds().width * this->shape.getScale().x / this->move_divider, 0.f);
 		}
 	}
-	/*
-	*/
 	this->updateAnimations();
 	return to_return;
 }
@@ -127,3 +136,37 @@ void Player::updateAnimations()
 
 }
 
+sf::Texture Player::get_Texture() const
+{
+	return this->texture;
+}
+
+sf::Vector2u Player::get_window_size() const
+{
+	return this->window_size;
+}
+
+unsigned int Player::get_scale_divider() const
+{
+	return this->scale_divider;
+}
+
+sf::Vector2i Player::get_shape_size() const
+{
+	return this->shape_size;
+}
+
+float Player::get_scale_x() const
+{
+	return this->scale_x;
+}
+
+float Player::get_scale_y() const
+{
+	return this->scale_y;
+}
+
+float Player::get_in_square_divider() const
+{
+	return this->shape_in_square_divider;
+}

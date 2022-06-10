@@ -2,6 +2,10 @@
 
 Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(), player(Player(wind.getSize(), sf::Vector2i(14, 8), sf::Vector2i(72, 50), 16, 32, 0.8)), is_music_playing(false), is_background_music_playing(false)
 {
+	if (frame_limit == 0)
+	{
+		throw ZeroOccuredException();
+	}
 	this->window.setFramerateLimit(frame_limit);
 }
 
@@ -84,8 +88,47 @@ void Game::update_game()
 	}
 }
 
-
 bool Game::get_is_end() const
 {
 	return this->is_end;
+}
+
+sf::RenderWindow& Game::get_window_ref()
+{
+	return this->window;
+}
+
+sf::Event Game::get_event() const
+{
+	return this->event;
+}
+
+Game_map& Game::get_map()
+{
+	return this->map;
+}
+
+Player Game::get_player() const
+{
+	return this->player;
+}
+
+bool Game::get_is_music_playing() const
+{
+	return this->is_music_playing;
+}
+
+bool Game::get_is_background_music_playing() const
+{
+	return this->is_background_music_playing;
+}
+
+sf::Music& Game::get_music_ref()
+{
+	return this->music;
+}
+
+std::vector<std::unique_ptr<Minigame>>& Game::get_minigames_ref()
+{
+	return this->minigames;
 }

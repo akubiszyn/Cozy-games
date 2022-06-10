@@ -9,32 +9,19 @@ class Minigame
 public:
 	virtual void start(sf::RenderWindow&) = 0;
 	virtual unsigned int get_score() const = 0;
-	//virtual bool get_is_end() = 0;
 	virtual ~Minigame() = 0;
 };
 
 class Clicking_minigame : public Minigame
 {
 private:
-	//Variables
-	//Window
-//sf::RenderWindow& window;
-//sf::VideoMode videoMode;
 	sf::Event event;
-
-	//Mouse positions
 	sf::Vector2i mouse_window;
 	sf::Vector2f mouse_general;
-
-	//Resources
 	sf::Font font;
 	std::map<unsigned int, std::string> textures_info;
-
-	//Text
 	sf::Text text;
 	sf::Text end_game;
-
-	//Game logic
 	bool end;
 	unsigned int score;
 	int to_lose;
@@ -44,8 +31,6 @@ private:
 	bool mouse_is_pressed;
 	float movement_speed;
 	float movement_left_right;
-
-	//Game objects
 	std::vector<sf::Sprite> food;
 	sf::Texture textures[8];
 	sf::Sprite food_object;
@@ -54,37 +39,21 @@ private:
 	sf::Texture background_texture;
 	sf::Sprite end_screen;
 	sf::Texture edn_screen_texture;
-
-	//Private functions
-//void iniVariables();
-//void initWindow();
 	void setFonts();
 	void setText();
-	//void setEnemies();
-
 public:
-	//Constructors / Destructors
 	Clicking_minigame();
 	virtual ~Clicking_minigame();
 	void restartGame();
-
-	//Accessors
-//const bool running() const;
 	bool get_end() const;
-
-	//Functions
 	void Spawn_food_object(sf::RenderWindow&);
-
-	//void pollEvents();
 	void updateMousePositions(sf::RenderWindow&);
 	void updateText();
 	void updateFood(sf::RenderWindow&);
-	//void update_game();
 	virtual void start(sf::RenderWindow&);
 	void displayText(sf::RenderTarget& target);
 	void displayFood(sf::RenderTarget& target);
 	void display_end_game(sf::RenderTarget& target);
-	//void display();
 	virtual unsigned int get_score() const;
 	void scale(sf::RenderWindow&, sf::Sprite&, int, int);
 	void make_end_game(sf::RenderWindow&);

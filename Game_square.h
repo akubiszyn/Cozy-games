@@ -31,7 +31,6 @@ public:
 	float get_scale_x() const;
 	float get_scale_y() const;
 	//virtual void change_animation();
-
 	//void check_square_texture(std::string);
 	//void check_position(float, float);
 };

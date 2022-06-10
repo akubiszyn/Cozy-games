@@ -1,7 +1,7 @@
 #pragma once
 #include "Player.h"
-#include<vector>
 #include<memory>
+#include<vector>
 #include<unordered_map>
 #include<map>
 
@@ -14,8 +14,7 @@ private:
 	std::vector<std::unique_ptr<NPC>> npcs;
 	unsigned int gridlength;
 	unsigned int gridheight;
-	sf::Vector2f player_position;
-
+	//sf::Vector2f player_position;
 	std::vector<sf::Vector2i> npc_positions;
 	void set_up_initial_state();
 	void set_up_npc_positions();
@@ -24,10 +23,8 @@ private:
 	bool play_music;
 	sf::Vector2u window_size;
 	//sf::RenderWindow& window;
-
 public:
 	std::vector<sf::Vector2i>& get_npc_positions();
-	sf::Vector2i get_player_position() const;
 	unsigned int get_gridlength() const;
 	unsigned int get_gridheight() const;
 	std::map<unsigned int, std::map<unsigned int, Game_square>>& get_squares_first();
@@ -43,6 +40,5 @@ public:
 	//void set_window_size(sf::RenderWindow&);
 	sf::Vector2u get_window_size() const;
 	bool check_collision(const Player&);
-	void update_player_pos(sf::Vector2f);
-
+	//void update_player_pos(sf::Vector2f);
 };

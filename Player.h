@@ -34,4 +34,11 @@ public:
 	sf::Sprite& get_sprite_ref();
 	float get_movement_x() const;
 	float get_movement_y() const;
+	sf::Texture get_Texture() const;
+	sf::Vector2u get_window_size() const;
+	unsigned int get_scale_divider() const;
+	sf::Vector2i get_shape_size() const;
+	float get_scale_x() const;
+	float get_scale_y() const;
+	float get_in_square_divider() const;
 };

@@ -44,6 +44,14 @@ Game_square::Game_square()
 
 Game_square::Game_square(std::string texture, unsigned int square_width, unsigned int square_height, bool accessed, int width_multiply, int height_multiply)
 {
+	if (square_width == 0 || square_height == 0)
+	{
+		throw ZeroOccuredException();
+	}
+	if (width_multiply < 0 || height_multiply < 0)
+	{
+		throw InvalidPositionException();
+	}
 	//this->wholeFrame.loadFromFile(texture);
 	//his->wholeSprite.setTexture(this->wholeFrame);
 	//this->currentFrame = sf::IntRect(0, 0, square_width, square_height);

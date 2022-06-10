@@ -31,6 +31,14 @@ void Creature::set_Sprite(std::string texture, unsigned int width, unsigned int 
 
 Creature::Creature(std::string texture, unsigned int width, unsigned int height,  float in_square_scale_x, float in_square_scale_y, sf::Vector2i pos, unsigned int rect_x, unsigned int rect_y)
 {
+	if (width == 0 || height == 0 || in_square_scale_x == 0 || in_square_scale_y == 0 || rect_x == 0 || rect_y == 0)
+	{
+		throw ZeroOccuredException();
+	}
+	if (pos.x < 0 || pos.y < 0)
+	{
+		throw InvalidPositionException();
+	}
 	this->rect_x = rect_x;
 	this->rect_y = rect_y;
 	this->in_square_scale_x = in_square_scale_x;
@@ -137,7 +145,7 @@ Creature& Creature::operator=(Creature&& creature) noexcept(true)
 	}
 	return *this;
 }
-/*
+
 float Creature::get_in_square_scale_x() const
 {
 	return this->in_square_scale_x;
@@ -156,7 +164,17 @@ float Creature::get_scale_y() const
 {
 	return this->scale_y;
 }
-*/
+
+unsigned int Creature::get_rect_x() const
+{
+	return this->rect_x;
+}
+
+unsigned int Creature::get_rect_y() const
+{
+	return this->rect_y;
+}
+
 void Creature::set_position(float x, float y)
 {
 	if (x < 0 || y < 0)
@@ -572,4 +590,50 @@ void Chicken::stop_now(bool stop)
 std::string Chicken::get_music_path() const
 {
 	return  this->music_path;
+}
+
+
+bool Chicken::get_stop() const
+{
+	return this->stop;
+}
+
+int Chicken::get_moving_up_down() const
+{
+	return this->moving_up_down;
+}
+
+int Chicken::get_moving_left_right() const
+{
+	return this->moving_left_right;
+}
+
+unsigned int Chicken::get_distance() const
+{
+	return this->distance;
+}
+
+unsigned int Chicken::get_distance_max() const
+{
+	return this->distance_max;
+}
+
+sf::IntRect Chicken::get_currentFrame() const
+{
+	return this->currentFrame;
+}
+
+sf::Texture Chicken::get_WholeFrame() const
+{
+	return this->wholeFrame;
+}
+
+sf::Sprite Chicken::get_WholeSprite() const
+{
+	return this->wholeSprite;
+}
+
+sf::Clock Chicken::get_animationTimer() const
+{
+	return this->animationTimer;
 }

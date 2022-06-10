@@ -52,14 +52,14 @@ void Game_map::set_up_npc_positions()
 
 void Game_map::set_up_initial_state()
 {
-	this->player_position = sf::Vector2f(14, 8);
+	//this->player_position = sf::Vector2f(14, 8);
 	this->set_up_npc_positions();
 	this->set_up_squares();
 	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(10, 13), 29, 48, 16, 0, 20)));
 	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(9, 14), 29, 48, -16, 0, 20)));
-	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 0, 8, 15)));
-	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(5, 8), 29, 48, 0, 8, 15)));
 	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 0, 8, 15)));
+	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(5, 8), 29, 48, 0, 8, 15)));
+	//this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 0, 8, 15)));
 	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(2, 13), 29, 48, 0, 8, 20)));
 	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(4, 12), 29, 48, 0, -8, 20)));
 	this->animals.push_back(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(1, 11), 29, 48, 0, 8, 25)));
@@ -142,12 +142,12 @@ bool Game_map::check_collision(const Player& player)
 	}
 	return false;
 }
-
+/*
 void Game_map::update_player_pos(sf::Vector2f new_pos)
 {
 	this->player_position = new_pos;
 }
-
+*/
 void Game_map::set_up_squares()
 {
 	auto cmpLambda = [](const sf::Vector2i& l, const sf::Vector2i& r)
@@ -342,7 +342,3 @@ sf::Vector2u Game_map::get_window_size() const
 {
 	return this->window_size;
 }
-
-#include "Game_map.h"
-
-

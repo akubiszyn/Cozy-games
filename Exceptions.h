@@ -14,3 +14,10 @@ public:
 	//InvalidPositionException();
 	const char* what() const throw();
 };
+
+class ZeroOccuredException : public std::exception
+{
+public:
+	//InvalidPositionException();
+	const char* what() const throw();
+};
