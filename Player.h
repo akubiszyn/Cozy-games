@@ -20,6 +20,7 @@ class Player
 	float shape_in_square_divider;
 	float movement_x;
 	float movement_y;
+	int direction;
 public:
 	Player(sf::Vector2u, sf::Vector2i, sf::Vector2i, unsigned int, unsigned int, float);
 	virtual ~Player() {}
@@ -41,4 +42,5 @@ public:
 	float get_scale_x() const;
 	float get_scale_y() const;
 	float get_in_square_divider() const;
+	int get_dir();
 };

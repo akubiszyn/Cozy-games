@@ -70,6 +70,7 @@ sf::Vector2f Player::updateMovement() {
 			this->moving = true;
 			this->updateAnimations();
 			to_return = sf::Vector2f(0.f, -this->shape.getLocalBounds().height * this->shape.getScale().y / this->move_divider);
+			direction = 0;
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
@@ -81,6 +82,7 @@ sf::Vector2f Player::updateMovement() {
 			this->moving = true;
 			this->updateAnimations();
 			to_return = sf::Vector2f(this->shape.getLocalBounds().width * this->shape.getScale().x / this->move_divider, 0.f);
+			direction = 3;
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
@@ -91,6 +93,7 @@ sf::Vector2f Player::updateMovement() {
 			this->moving = true;
 			this->updateAnimations();
 			to_return = sf::Vector2f(0.f, this->shape.getLocalBounds().height * this->shape.getScale().y / this->move_divider);
+			direction = 2;
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -102,6 +105,7 @@ sf::Vector2f Player::updateMovement() {
 			this->moving = true;
 			this->updateAnimations();
 			to_return = sf::Vector2f(-this->shape.getLocalBounds().width * this->shape.getScale().x / this->move_divider, 0.f);
+			direction = 1;
 		}
 	}
 	this->updateAnimations();
@@ -169,4 +173,8 @@ float Player::get_scale_y() const
 float Player::get_in_square_divider() const
 {
 	return this->shape_in_square_divider;
+}
+int Player::get_dir()
+{
+	return direction;
 }

@@ -3,6 +3,10 @@
 
 
 void Snakegame::update_game(sf::RenderWindow& window) {
+	sf::Music music;
+	music.openFromFile("music/chicken.ogg");
+	music.setLoop(true);
+	music.play();
 	while (window.isOpen())
 	{
 		while (window.pollEvent(this->event)) {
@@ -10,12 +14,17 @@ void Snakegame::update_game(sf::RenderWindow& window) {
 				window.close();
 			}
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			window.close();
+			this->end = true;
+		}
 
 		this->updatePoints();
-		this->player.updateMovement(this->map);
+		this->player.updateMovement();
 		this->update_world_collision(player, window);
 		this->chicken.update_Movement(player, snake);
 		if (this->chicken.check_if_colliding(player, snake) == false) {
+			music.stop();
 			this->game_over(window);
 			break;
 		}
@@ -23,46 +32,67 @@ void Snakegame::update_game(sf::RenderWindow& window) {
 
 		//Draw
 		window.clear();
-		this->map.update_game_map(window);
+		this->worldBackground.setTexture(this->worldBackgroundTex);
+		window.draw(this->worldBackground);
 
 		//Draw everything
-
+		this->chicken.render(window);
 		this->render_text(window);
 		this->player.render(window);
-		this->chicken.render(window);
 		for (Chickens* element : this->snake) {
 			(*element).render(window);
+
 		}
 		window.display();
 
 	}
+}
+Snakegame::Snakegame()
+{
+	this->restartGame();
+
 }
 Snakegame::~Snakegame()
 {
 	for (auto& i : snake) {
 		delete i;
 	}
+	snake.clear();
+
 }
 void Snakegame::start(sf::RenderWindow& window) {
+	this->restartGame();
 	initWindow(window);
 	update_game(window);
 }
 
-void Snakegame::initWindow(sf::RenderWindow& window) {
-	window.create(sf::VideoMode(640, 480), "Snake game", sf::Style::Default);
-	window.setFramerateLimit(60);
+void Snakegame::restartGame()
+{
+	for (auto& i : snake) {
+		delete i;
+	}
+	this->player.get_sprite_ref().setPosition(500, 500);
+	snake.clear();
+	this->worldBackgroundTex.loadFromFile("images/grass_template.jpg");
+	this->chicken.get_chicken_restart();
+	this->result = 0;
+	this->end = false;
+	this->startGame = false;
 }
-void Snakegame::initPlayer() {
+
+void Snakegame::initWindow(sf::RenderWindow& window) {
+	window.create(sf::VideoMode::getFullscreenModes()[0], "Snake game", sf::Style::Default);
+	window.setFramerateLimit(60);
 }
 
 void Snakegame::game_over(sf::RenderWindow& window)
 {
 	this->pointText.setFont(this->font);
 	this->pointText.setCharacterSize(50);
-	this->pointText.setFillColor(sf::Color::Red);
+	this->pointText.setFillColor(sf::Color::Black);
 	this->pointText.setPosition(
 	window.getSize().x / 3.f * 2 - this->gameOverText.getGlobalBounds().width / 0.2f,
-	window.getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
+	window.getSize().y / 3.f * 2 - this->gameOverText.getGlobalBounds().height / 2.f);
 	this->worldBackgroundTex.loadFromFile("images/game_over.png");
 	this->worldBackground.setTexture(this->worldBackgroundTex);
 	while (window.isOpen())
@@ -74,6 +104,7 @@ void Snakegame::game_over(sf::RenderWindow& window)
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 			window.close();
+			this->end = true;
 		}
 		this->updatePoints();
 		window.clear();
@@ -86,25 +117,26 @@ void Snakegame::game_over(sf::RenderWindow& window)
 void Snakegame::update_world_collision(Player player, sf::RenderWindow& window)
 {
 	//Left world collision
-	if (player.get_shape().getGlobalBounds().left < 0.f)
+	if (player.get_sprite().getGlobalBounds().left < 0.f)
 	{
-		player.get_shape().setPosition(0.f, player.get_shape().getGlobalBounds().top);
+		this->chicken.set_if_colliding(false);
+
 	}
 	//Right world collison
-	else if (player.get_shape().getGlobalBounds().left + player.get_shape().getGlobalBounds().width >= window.getSize().x)
+	else if (player.get_sprite().getGlobalBounds().left + player.get_sprite().getGlobalBounds().width >= window.getSize().x)
 	{
-		player.get_shape().setPosition(window.getSize().x - player.get_shape().getGlobalBounds().width,player.get_shape().getGlobalBounds().top);
+		this->chicken.set_if_colliding(false);
 	}
 
 	//Top world collision
-	if (player.get_shape().getGlobalBounds().top < 0.f)
+	if (player.get_sprite().getGlobalBounds().top < 0.f)
 	{
-		player.get_shape().setPosition(player.get_shape().getGlobalBounds().left, 0.f);
+		this->chicken.set_if_colliding(false);
 	}
 	//Bottom world collision
-	else if (player.get_shape().getGlobalBounds().top + player.get_shape().getGlobalBounds().height >= window.getSize().y)
+	else if (player.get_sprite().getGlobalBounds().top + player.get_sprite().getGlobalBounds().height >= window.getSize().y)
 	{
-		player.get_shape().setPosition(player.get_shape().getGlobalBounds().left, window.getSize().y - player.get_shape().getGlobalBounds().height);
+		this->chicken.set_if_colliding(false);
 	}
 }
 
@@ -113,47 +145,57 @@ void Snakegame::set_result()
 	result = snake.size();
 }
 
-int Snakegame::get_result()
+unsigned int Snakegame::get_score() const
 {
 	return this->result;
 }
+
+
 
 void Snakegame::updatePoints()
 {
 	set_result();
 	std::stringstream ss;
 
-	ss << "Score: " << this->get_result() << "\n";
+	ss << "Score: " << this->get_score() << "\n";
 
 	this->pointText.setString(ss.str());
 }
 
 void Snakegame::render_text(sf::RenderWindow& window)
 {
-	this->font.loadFromFile("fonts/arial.ttf");
+	this->font.loadFromFile("fonts/cozy_caps.ttf");
 	this->pointText.setFont(this->font);
 	window.draw(this->pointText);
+}
+
+bool Snakegame::get_end() const
+{
+	return end;
 }
 
 
 bool Chickens::check_if_colliding(Player player, std::vector<Chickens*>& snake)
 {
-	
+	if (if_colliding == false) {
+		return false;
+	}
 	for (int i = 4; i < snake.size(); i++) {
 		if (this->check_collision(player, snake[i]) == false) {
 			count++;
 		}
 		if( count == 5){
-			return false;
+			if_colliding = false;
+			return if_colliding;
 		}
-	}	
+	}
 }
 
 bool Chickens::check_collision(Player player, Chickens* chicken)
 {
 	sf::FloatRect chicken_rect = (*chicken).sprite.getGlobalBounds();
 	sf::FloatRect check = sf::FloatRect(chicken_rect.left, chicken_rect.top, chicken_rect.width, chicken_rect.height);
-	sf::FloatRect player_rect = player.get_shape().getGlobalBounds();
+	sf::FloatRect player_rect = player.get_sprite().getGlobalBounds();
 	sf::FloatRect check2 = sf::FloatRect(player_rect.left, player_rect.top, player_rect.width, player_rect.height);
 	if (check.intersects(check2)) {
 		return false;
@@ -161,10 +203,27 @@ bool Chickens::check_collision(Player player, Chickens* chicken)
 	return true;
 }
 
+void Chickens::get_chicken_restart()
+{
+	for (auto& i : textures) {
+		delete i.second;
+	}
+	textures.clear();
+	this->set_Sprite(400, 400);
+	if_colliding = true;
+	count = 0;
+	found = true;
+}
+
+void Chickens::set_if_colliding(bool set)
+{
+	this->if_colliding = set;
+}
+
 void Chickens::render(sf::RenderTarget& target)
 {
 	target.draw(this->sprite);
-	
+
 }
 
 
@@ -179,6 +238,7 @@ Chickens::~Chickens()
 	for (auto& i : textures) {
 		delete i.second;
 	}
+	textures.clear();
 }
 
 void Chickens::reset(Player player, std::vector<Chickens*> &snake)
@@ -189,7 +249,7 @@ void Chickens::reset(Player player, std::vector<Chickens*> &snake)
 	if (check_collision(player, this) == false) {
 		found = false;
 		snake.push_back(new Chickens(x_before, y_before));
-		
+
 	}
 	while (found == false) {
 		float x = rand() % (640);
@@ -204,14 +264,14 @@ void Chickens::reset(Player player, std::vector<Chickens*> &snake)
 		if (y_before + new_y < 0) {
 			new_y = 0 - y_before;
 		}
-		if (x_before + new_x > 640) {
-			new_x = 640 - x_before;
+		if (x_before + new_x > 1366) {
+			new_x = 1366 - x_before;
 		}
-		if (y_before + new_y > 480) {
-			new_y = 480 - y_before;
+		if (y_before + new_y > 600) {
+			new_y = 600 - y_before;
 		}
 		this->sprite.move(sf::Vector2f(new_x, new_y));
-		
+
 
 		found = true;
 
@@ -232,7 +292,7 @@ void Chickens::set_Sprite(float x, float y)
 void Chickens::set_Texture()
 {
 	this->textures["chickens"] = new sf::Texture();
-	this->textures["chickens"]->loadFromFile("images/chicken_walk_right.png");
+	this->textures["chickens"]->loadFromFile("images/chicken_walk_left.png");
 }
 
 void Chickens::update_Movement(Player player, std::vector<Chickens*>& snake)
@@ -259,8 +319,8 @@ void Chickens::update_Movement(Player player, std::vector<Chickens*>& snake)
 
 	}
 	if (snake.size() != 0) {
-		float x = player.get_shape().getPosition().x;
-		float y = player.get_shape().getPosition().y;
+		float x = player.get_sprite().getPosition().x;
+		float y = player.get_sprite().getPosition().y;
 		float my_x = (*snake[0]).sprite.getPosition().x;
 		float my_y = (*snake[0]).sprite.getPosition().y;
 		if (player.get_dir() == 1) {
@@ -282,9 +342,9 @@ void Chickens::update_Movement(Player player, std::vector<Chickens*>& snake)
 			(*snake[0]).sprite.move((x - my_x + 20) * 0.4f, (y - my_y + 90) * 0.4f);
 		}
 
-			
+
 	}
-	
+
 
 
 
@@ -295,5 +355,3 @@ sf::Sprite Chickens::get_shape()
 {
 	return sprite;
 }
-
-

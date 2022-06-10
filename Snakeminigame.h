@@ -1,21 +1,21 @@
+
+#pragma once
 #include "Player.h"
-#include "Game_map.h"
-#include "Game_square.h"
+#include "Minigame.h"
 #include <map>
 #include <vector>
 #include <string>
 
 
-class Chickens : Player {
+
+class Chickens {
+	bool if_colliding = true;
 	int count = 0;
 	bool found = true;
 	sf::Texture* texture;
 	sf::Sprite sprite;
 	sf::IntRect currentFrame;
 	std::map<std::string, sf::Texture*> textures;
-	sf::Clock timer;
-	float last_x = 0.0f;
-	float last_y = 0.0f;
 public:
 	Chickens(float x, float y);
 	~Chickens();
@@ -27,16 +27,20 @@ public:
 	sf::Sprite get_shape();
 	bool check_if_colliding(Player, std::vector<Chickens*>&);
 	bool check_collision(Player, Chickens*);
+	void get_chicken_restart();
+	void set_if_colliding(bool);
 };
 
-class Snakegame {
+class Snakegame : public Minigame {
 private:
 	//sf::RenderWindow* window;
+
+	bool end;
+	bool startGame;
 	sf::Event event;
-	Player player;
+	Player player = Player(sf::Vector2u(1366, 768), sf::Vector2i(14, 8), sf::Vector2i(72, 50), 16, 6, 0.8);
 	Game_square snake_square;
-	Game_map map = Game_map(false);
-	Chickens chicken = Chickens(200, 200);
+	Chickens chicken = Chickens(400, 400);
 	std::vector<Chickens*> snake;
 	sf::Font font;
 	sf::Text pointText;
@@ -46,23 +50,20 @@ private:
 	int result = 0;
 
 public:
-	Snakegame() {}
+	Snakegame();
 	~Snakegame();
-	void start(sf::RenderWindow&);
+	virtual void start(sf::RenderWindow&);
+	void restartGame();
 	void update_game(sf::RenderWindow&);
 	void initWindow(sf::RenderWindow&);
-	void initPlayer();
 	void game_over(sf::RenderWindow&);
 	void update_world_collision(Player player, sf::RenderWindow&);
 	void set_result();
-	int get_result();
+	virtual unsigned int get_score() const;
 	void updatePoints();
 	void render_text(sf::RenderWindow&);
+	bool get_end() const;
 
-	
-};
-
-class Snake {
 
 };
 

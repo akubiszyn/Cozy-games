@@ -48,6 +48,8 @@ void Game_map::set_up_npc_positions()
 	this->get_npc_positions().push_back(sf::Vector2i(6, 9));
 	this->get_npc_positions().push_back(sf::Vector2i(12, 3));
 	this->get_npc_positions().push_back(sf::Vector2i(13, 13));
+	this->get_npc_positions().push_back(sf::Vector2i(8, 1));
+
 }
 
 void Game_map::set_up_initial_state()
@@ -71,6 +73,7 @@ void Game_map::set_up_initial_state()
 	this->npcs.push_back(std::make_unique<NPC>(NPC("images/npc.png", this->window_size.x / 16, this->window_size.y / 16, 0.8, 0.8, sf::Vector2i(get_npc_positions()[0].x, get_npc_positions()[0].y), 50, 50)));
 	this->npcs.push_back(std::make_unique<NPC>(NPC("images/npc2.png", this->window_size.x / 16, this->window_size.y / 16, 0.8, 0.8, sf::Vector2i(get_npc_positions()[1].x, get_npc_positions()[1].y), 50, 50)));
 	this->npcs.push_back(std::make_unique<NPC>(NPC("images/npc3.png", this->window_size.x / 16, this->window_size.y / 16, 0.8, 0.8, sf::Vector2i(get_npc_positions()[2].x, get_npc_positions()[2].y), 700, 700)));
+	this->npcs.push_back(std::make_unique<NPC>(NPC("images/npc.png", this->window_size.x / 16, this->window_size.y / 16, 0.8, 0.8, sf::Vector2i(get_npc_positions()[3].x, get_npc_positions()[3].y), 50, 50)));
 	//this->get_npcs()[0]->get_Sprite().setTexture(this->get_npcs()[0]->get_Texture());
 	//this->get_npcs()[1]->get_Sprite().setTexture(this->get_npcs()[1]->get_Texture());
 	//this->get_npcs()[2]->get_Sprite().setTexture(this->get_npcs()[2]->get_Texture());
@@ -175,7 +178,7 @@ void Game_map::set_up_squares()
 					   { sf::Vector2i(3, 2), "images/drzewo.png" }, { sf::Vector2i(6, 2), "images/drzewo.png" },
 					   { sf::Vector2i(7, 2), "images/drzewo.png" }, { sf::Vector2i(0, 3), "images/drzewo.png" },
 					   { sf::Vector2i(3, 3), "images/drzewo.png" }, { sf::Vector2i(7, 3), "images/drzewo.png" },
-					   { sf::Vector2i(3, 4), "images/drzewo.png" }, 
+					   { sf::Vector2i(3, 4), "images/drzewo.png" },
 					   { sf::Vector2i(4, 4), "images/drzewo.png" }, { sf::Vector2i(4, 5), "images/drzewo.png" },
 					   { sf::Vector2i(7, 5), "images/drzewo.png" }, { sf::Vector2i(0, 6), "images/drzewo.png" },
 					   { sf::Vector2i(1, 6), "images/drzewo.png" }, { sf::Vector2i(6, 6), "images/drzewo.png" },

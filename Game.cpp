@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Snakeminigame.h"
 
 Game::Game(sf::RenderWindow& wind, unsigned int frame_limit) : window(wind), event(sf::Event()), is_end(false), map(), player(Player(wind.getSize(), sf::Vector2i(14, 8), sf::Vector2i(72, 50), 16, 32, 0.8)), is_music_playing(false), is_background_music_playing(false)
 {
@@ -16,6 +17,7 @@ void Game::update_game()
 	this->minigames.push_back(std::make_unique<Clicking_minigame>(Clicking_minigame()));
 	this->minigames.push_back(std::make_unique<JumpingMinigame>(JumpingMinigame()));
 	this->minigames.push_back(std::make_unique<DestroyBlockMinigame>(DestroyBlockMinigame()));
+	this->minigames.push_back(std::make_unique<Snakegame>(Snakegame()));
 	while (this->window.isOpen())
 	{
 		for (auto& npc_ptr : this->map.get_npcs()) {
