@@ -1,4 +1,3 @@
-#include <SFML/Graphics.hpp>
 //#include <box2d/box2d.h>
 #include "Menu.h"
 #include <iostream>
