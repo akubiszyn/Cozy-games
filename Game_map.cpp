@@ -58,6 +58,8 @@ void Game_map::set_up_initial_state()
 	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(10, 13), 29, 48, 16, 0, 20))));
 	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(9, 14), 29, 48, -16, 0, 20))));
 	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_left.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 0, 8, 15))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(5, 8), 29, 48, 0, 8, 15))));
+	this->animals.push_back(std::move(std::make_unique<Chicken>(Chicken("images/chicken_walk_right.png", this->window_size.x / 16, this->window_size.y / 16, 0.5, 0.5, sf::Vector2i(8, 13), 29, 48, 0, 8, 15))));
 	//this->get_animals()[0]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	//this->get_animals()[1]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
 	//this->get_animals()[2]->get_Sprite().setTexture(this->get_animals()[0]->get_Texture());
@@ -168,7 +170,7 @@ void Game_map::set_up_squares()
 					   { sf::Vector2i(3, 2), "images/drzewo.png" }, { sf::Vector2i(6, 2), "images/drzewo.png" },
 					   { sf::Vector2i(7, 2), "images/drzewo.png" }, { sf::Vector2i(0, 3), "images/drzewo.png" },
 					   { sf::Vector2i(3, 3), "images/drzewo.png" }, { sf::Vector2i(7, 3), "images/drzewo.png" },
-					   { sf::Vector2i(3, 4), "images/drzewo.png" },
+					   { sf::Vector2i(3, 4), "images/drzewo.png" }, 
 					   { sf::Vector2i(4, 4), "images/drzewo.png" }, { sf::Vector2i(4, 5), "images/drzewo.png" },
 					   { sf::Vector2i(7, 5), "images/drzewo.png" }, { sf::Vector2i(0, 6), "images/drzewo.png" },
 					   { sf::Vector2i(1, 6), "images/drzewo.png" }, { sf::Vector2i(6, 6), "images/drzewo.png" },

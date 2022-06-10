@@ -1,6 +1,6 @@
 #pragma once
 #include "Ianimations.h"
-class Game_square : public Ianimations
+class Game_square
 {
 private:
 	bool isAccessable;
@@ -30,7 +30,7 @@ public:
 	sf::Texture get_Texture() const;
 	float get_scale_x() const;
 	float get_scale_y() const;
-	virtual void change_animation();
+	//virtual void change_animation();
 
 	//void check_square_texture(std::string);
 	//void check_position(float, float);
