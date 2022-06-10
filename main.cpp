@@ -1,6 +1,5 @@
 //#include <box2d/box2d.h>
 #include "Menu.h"
-#include <iostream>
 #include "Game.h"
 int main()
 {

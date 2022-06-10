@@ -189,6 +189,7 @@ bool Chickens::check_if_colliding(Player player, std::vector<Chickens*>& snake)
 			return if_colliding;
 		}
 	}
+	return true;
 }
 
 bool Chickens::check_collision(Player player, Chickens* chicken)

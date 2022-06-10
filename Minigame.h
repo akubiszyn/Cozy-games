@@ -1,6 +1,5 @@
 #pragma once
 #include "Game_map.h"
-#include<iostream>
 #include<ctime>
 #include<sstream>
 
